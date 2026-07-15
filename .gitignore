@@ -1,0 +1,19 @@
+# build output
+dist/
+.astro/
+
+# dependencies
+node_modules/
+
+# archived old Wix site (kept locally, not committed)
+old/
+
+# throwaway palette comparison used during design
+palette-preview.html
+
+# misc
+.DS_Store
+*.log
+.env
+.env.*
+.vercel

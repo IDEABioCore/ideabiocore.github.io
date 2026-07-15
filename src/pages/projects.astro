@@ -1,0 +1,157 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/PageHero.astro';
+import { getCollection, render } from 'astro:content';
+
+const entries = (await getCollection('projects')).sort((a, b) => a.data.order - b.data.order);
+const projects = await Promise.all(
+  entries.map(async (p) => {
+    const { Content } = await render(p);
+    return { ...p.data, id: p.id, Content };
+  })
+);
+
+const partnerReasons = [
+  {
+    title: 'Industrial training',
+    body: 'We support career opportunities by giving students and staff the chance to undertake industry placements.',
+  },
+  {
+    title: 'Growth sectors',
+    body: 'Biotechnology and advanced bioengineering are important areas for future economic growth.',
+  },
+  {
+    title: 'Research collaboration',
+    body: 'Competitive research collaboration between academia and industry.',
+  },
+];
+---
+
+<BaseLayout title="Projects · IDEA Bio" description="From renewable natural products to carbon recycling and biotherapeutics — projects delivered with partners across industry, government and academia.">
+  <PageHero
+    eyebrow="Projects"
+    title="Our Projects"
+    lead="Partnering with companies, computers and nature to sustainably design molecules, materials, fuels, therapeutics and foods."
+  />
+
+  <section class="section">
+    <div class="container">
+      <ul class="proj-grid">
+        {projects.map((p, i) => {
+          const Body = p.Content;
+          return (
+            <li class="proj-card" data-reveal style={`transition-delay:${(i % 3) * 80}ms`}>
+              <div class="proj-media">
+                <img src={p.image} alt={p.alt} width="640" height="427" loading="lazy" />
+                {p.featured && <span class="proj-flag">Featured</span>}
+              </div>
+              <div class="proj-body">
+                <span class="proj-kicker">{p.category}</span>
+                <h2>{p.title}</h2>
+                {p.partner && <p class="proj-partner">{p.partner}</p>}
+                <div class="proj-desc"><Body /></div>
+              </div>
+            </li>
+          );
+        })}
+      </ul>
+    </div>
+  </section>
+
+  <!-- Why partner with us -->
+  <section class="section section--panel">
+    <div class="container">
+      <div class="why-head" data-reveal>
+        <p class="eyebrow">Why partner with us</p>
+        <h2>Driving growth, productivity and competitiveness</h2>
+      </div>
+      <ul class="why-grid">
+        {partnerReasons.map((r, i) => (
+          <li class="why-card" data-reveal style={`transition-delay:${i * 80}ms`}>
+            <h3>{r.title}</h3>
+            <p>{r.body}</p>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .proj-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: clamp(1.25rem, 2.5vw, 1.75rem);
+    list-style: none;
+    padding: 0;
+  }
+  .proj-card {
+    display: flex;
+    flex-direction: column;
+    background: var(--surface);
+    border: 1px solid var(--hairline);
+    border-radius: var(--radius);
+    overflow: hidden;
+    transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease;
+  }
+  .proj-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow);
+    border-color: color-mix(in srgb, var(--accent) 40%, var(--hairline));
+  }
+  .proj-media { position: relative; aspect-ratio: 3 / 2; overflow: hidden; }
+  .proj-media img { width: 100%; height: 100%; object-fit: cover; transition: transform .35s ease; }
+  .proj-card:hover .proj-media img { transform: scale(1.05); }
+  .proj-flag {
+    position: absolute; top: 12px; left: 12px;
+    background: var(--surface);
+    color: var(--accent-text);
+    border: 1px solid var(--hairline);
+    font-family: var(--font-mono);
+    font-size: 0.66rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 0.3rem 0.6rem;
+    border-radius: 999px;
+  }
+  .proj-body { padding: 1.5rem 1.6rem 1.7rem; display: flex; flex-direction: column; gap: 0.5rem; flex: 1; }
+  .proj-kicker {
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--accent-text);
+    font-weight: 600;
+  }
+  .proj-body h2 { font-size: var(--step-1); line-height: 1.2; }
+  .proj-partner { font-size: 0.82rem; color: var(--ink-soft); font-weight: 600; }
+  .proj-desc { color: var(--muted); font-size: 0.94rem; }
+  .proj-desc :global(p) { margin: 0; }
+
+  .why-head { max-width: 640px; margin-bottom: clamp(2rem, 4vw, 3rem); }
+  .why-head h2 { margin-top: 0.9rem; }
+  .why-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: clamp(1.25rem, 2.5vw, 1.75rem);
+    list-style: none;
+    padding: 0;
+  }
+  .why-card {
+    padding: 1.75rem 1.6rem;
+    background: var(--surface);
+    border: 1px solid var(--hairline);
+    border-left: 3px solid var(--accent);
+    border-radius: var(--radius);
+  }
+  .why-card h3 { font-size: var(--step-1); margin-bottom: 0.5rem; }
+  .why-card p { color: var(--muted); font-size: 0.96rem; }
+
+  @media (max-width: 900px) {
+    .proj-grid { grid-template-columns: 1fr 1fr; }
+    .why-grid { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 620px) {
+    .proj-grid { grid-template-columns: 1fr; }
+  }
+</style>

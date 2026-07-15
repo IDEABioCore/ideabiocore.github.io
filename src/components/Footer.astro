@@ -1,0 +1,126 @@
+---
+const year = 2026; // static build — avoid Date() so output is deterministic
+const nav = [
+  { href: '/about', label: 'About' },
+  { href: '/team', label: 'Team' },
+  { href: '/projects', label: 'Projects' },
+  { href: '/services', label: 'Services' },
+  { href: '/contact', label: 'Contact' },
+];
+---
+
+<!-- Closing call-to-action -->
+<section class="cta-band">
+  <div class="container cta-inner">
+    <div>
+      <p class="eyebrow eyebrow--plain">Let's build something</p>
+      <h2 class="cta-title">Do you have an IDEA?</h2>
+      <p class="cta-sub">Tell us what you want to make with biology — we'll help you design, test and scale it.</p>
+    </div>
+    <a href="mailto:ideabio@uq.edu.au" class="btn btn--primary cta-btn">Do you have an IDEA?</a>
+  </div>
+</section>
+
+<footer class="site-footer">
+  <div class="container footer-grid">
+    <div class="footer-brand">
+      <a href="/" class="brand" aria-label="IDEA Bio — home">
+        <svg class="brand-mark" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
+          <circle cx="12" cy="4" r="2" /><circle cx="4" cy="9" r="2" /><circle cx="20" cy="9" r="2" />
+          <circle cx="7" cy="18" r="2" /><circle cx="17" cy="18" r="2" /><circle cx="12" cy="12" r="2.2" />
+          <path d="M12 6v4M6 10l4 3M18 10l-4 3M9 16l1.5-2M15 16l-1.5-2" />
+        </svg>
+        <span class="brand-name">IDEA<span> Bio</span></span>
+      </a>
+      <p class="footer-tagline">Integrated Design Environment for Advanced Biomanufacturing. A synthetic biology biofoundry at the AIBN, The University of Queensland.</p>
+    </div>
+
+    <nav class="footer-nav" aria-label="Footer">
+      <h3 class="footer-h">Explore</h3>
+      <ul>
+        {nav.map((item) => <li><a href={item.href}>{item.label}</a></li>)}
+      </ul>
+    </nav>
+
+    <div class="footer-contact">
+      <h3 class="footer-h">Contact</h3>
+      <ul>
+        <li><a href="mailto:ideabio@uq.edu.au">ideabio@uq.edu.au</a></li>
+        <li><span>Building 75, Cnr College Rd &amp; Cooper Rd,<br />St Lucia QLD 4072, Australia</span></li>
+        <li class="footer-social">
+          <a href="https://www.linkedin.com/company/ideabio/" target="_blank" rel="noopener">LinkedIn</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="container footer-base">
+    <p>© {year} IDEA Bio · AIBN, The University of Queensland</p>
+    <p>Made with biology in mind.</p>
+  </div>
+</footer>
+
+<style>
+  /* CTA band */
+  .cta-band { background: var(--ink); color: #fff; }
+  :global(:root[data-theme="dark"]) .cta-band { background: var(--surface-2); }
+  @media (prefers-color-scheme: dark) {
+    :global(:root:not([data-theme="light"])) .cta-band { background: var(--surface-2); }
+  }
+  .cta-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 2rem;
+    flex-wrap: wrap;
+    padding-block: clamp(48px, 7vw, 84px);
+  }
+  .cta-band .eyebrow { color: var(--accent); }
+  .cta-title { color: #fff; font-size: var(--step-4); }
+  .cta-sub { color: rgba(255, 255, 255, 0.7); margin-top: 0.6rem; max-width: 42ch; }
+  .cta-btn { font-size: 1.02rem; padding: 1rem 1.7rem; }
+
+  /* footer */
+  .site-footer { background: var(--surface); border-top: 1px solid var(--hairline); }
+  .footer-grid {
+    display: grid;
+    grid-template-columns: 1.6fr 1fr 1.4fr;
+    gap: var(--gap);
+    padding-block: clamp(48px, 6vw, 72px);
+  }
+  .brand { display: inline-flex; align-items: center; gap: 0.6rem; text-decoration: none; font-weight: 700; letter-spacing: -0.02em; font-size: 1.18rem; color: var(--ink); }
+  .brand-mark { width: 26px; height: 26px; color: var(--accent); }
+  .brand-name > span { color: var(--accent-text); }
+  .footer-tagline { margin-top: 1rem; color: var(--muted); max-width: 42ch; font-size: 0.96rem; }
+
+  .footer-h {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--muted);
+    font-weight: 600;
+    margin-bottom: 1rem;
+  }
+  .footer-nav ul, .footer-contact ul { list-style: none; padding: 0; display: flex; flex-direction: column; gap: 0.6rem; }
+  .footer-nav a, .footer-contact a { color: var(--ink-soft); text-decoration: none; }
+  .footer-nav a:hover, .footer-contact a:hover { color: var(--accent-text); }
+  .footer-contact span { color: var(--muted); }
+  .footer-social { display: flex; gap: 1.1rem; margin-top: 0.3rem; }
+
+  .footer-base {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem 2rem;
+    flex-wrap: wrap;
+    padding-block: 1.5rem;
+    border-top: 1px solid var(--hairline);
+    color: var(--muted);
+    font-size: 0.85rem;
+  }
+
+  @media (max-width: 760px) {
+    .footer-grid { grid-template-columns: 1fr; gap: 2.25rem; }
+    .cta-inner { flex-direction: column; align-items: flex-start; }
+  }
+</style>

@@ -1,0 +1,140 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/PageHero.astro';
+
+const capabilities = [
+  {
+    n: '01',
+    title: 'Functional area clusters',
+    body: 'Efficient co-location of high-end equipment so multi-step workflows run side by side.',
+  },
+  {
+    n: '02',
+    title: 'New capabilities',
+    body: 'Open synthetic biology design spaces that enable capabilities the field has never had before.',
+  },
+  {
+    n: '03',
+    title: 'End-to-end optimisation',
+    body: 'Multi-organism upstream and downstream process optimisation, from strain to scale.',
+  },
+];
+---
+
+<BaseLayout title="About · IDEA Bio" description="IDEA Bio strives to impact society through innovation in cell design — creating useful cell factories for advanced biomanufacturing.">
+  <PageHero
+    eyebrow="About"
+    title="At the forefront of cell design"
+    lead="IDEA Bio strives to impact society through innovation in cell design. We aim to make a difference in advanced biomanufacturing by creating useful cell factories."
+    image="/images/scientist-cleanroom-bioprocessing.jpg"
+    imageAlt="Researcher in a cleanroom gown connecting a bioprocessing rig"
+  />
+
+  <!-- Portfolio -->
+  <section class="section section--surface">
+    <div class="container portfolio-grid">
+      <div class="portfolio-head" data-reveal>
+        <p class="eyebrow">Portfolio</p>
+        <h2>We partner with companies, computers, and nature.</h2>
+      </div>
+      <div class="portfolio-body" data-reveal>
+        <p>
+          We partner with companies, computers, and nature to sustainably design molecules,
+          materials, fuels, therapeutics, and foods. From microbes capable of growing on
+          greenhouse gas, to less polluting fertilizers, to new biologics or future foods —
+          all these can be made using biology through smart ideas.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Capabilities -->
+  <section class="section">
+    <div class="container">
+      <div class="cap-head" data-reveal>
+        <p class="eyebrow">What we've built</p>
+        <h2>A cluster designed for creative cellular design</h2>
+      </div>
+      <ul class="cap-grid">
+        {capabilities.map((c, i) => (
+          <li class="cap-card" data-reveal style={`transition-delay:${i * 80}ms`}>
+            <span class="cap-num">{c.n}</span>
+            <h3>{c.title}</h3>
+            <p>{c.body}</p>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <!-- Design space statement -->
+  <section class="section section--panel">
+    <div class="container design-grid">
+      <figure class="design-media" data-reveal>
+        <img src="/images/team-group-photo.jpg" alt="The IDEA Bio team outside the AIBN building" width="900" height="600" loading="lazy" />
+      </figure>
+      <div class="design-copy" data-reveal>
+        <p class="eyebrow">Our space</p>
+        <h2>Open design spaces for synthetic biology</h2>
+        <p class="lead">
+          As a space intended for creative cellular design, we have Syn Bio open design spaces
+          and house high-throughput strain engineering tools in our cluster.
+        </p>
+        <a href="/team" class="btn btn--primary">Meet the team</a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .portfolio-grid,
+  .design-grid {
+    display: grid;
+    gap: clamp(1.5rem, 5vw, 4rem);
+    align-items: center;
+  }
+  .portfolio-grid { grid-template-columns: 0.9fr 1.1fr; align-items: start; }
+  .portfolio-head h2 { margin-top: 0.9rem; }
+  .portfolio-body p { font-size: var(--step-1); color: var(--muted); }
+
+  .cap-head { max-width: 640px; margin-bottom: clamp(2rem, 4vw, 3rem); }
+  .cap-head h2 { margin-top: 0.9rem; }
+  .cap-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: clamp(1.25rem, 2.5vw, 1.75rem);
+    list-style: none;
+    padding: 0;
+  }
+  .cap-card {
+    padding: 1.9rem 1.7rem;
+    background: var(--surface);
+    border: 1px solid var(--hairline);
+    border-radius: var(--radius);
+    transition: transform .18s ease, border-color .18s ease;
+  }
+  .cap-card:hover { transform: translateY(-4px); border-color: color-mix(in srgb, var(--accent) 40%, var(--hairline)); }
+  .cap-num {
+    display: inline-block;
+    font-family: var(--font-mono);
+    font-size: 0.9rem;
+    color: var(--accent-text);
+    font-weight: 600;
+    letter-spacing: 0.08em;
+  }
+  .cap-card h3 { font-size: var(--step-1); margin: 0.75rem 0 0.6rem; }
+  .cap-card p { color: var(--muted); font-size: 0.96rem; }
+
+  .design-grid { grid-template-columns: 1fr 1fr; }
+  .design-media { margin: 0; }
+  .design-media img { width: 100%; aspect-ratio: 3 / 2; object-fit: cover; border-radius: var(--radius); box-shadow: var(--shadow); }
+  .design-copy h2 { margin: 0.9rem 0 1rem; }
+  .design-copy .lead { color: var(--muted); margin-bottom: 1.75rem; }
+
+  @media (max-width: 900px) {
+    .portfolio-grid { grid-template-columns: 1fr; }
+    .cap-grid { grid-template-columns: 1fr; }
+    .design-grid { grid-template-columns: 1fr; }
+    .design-media { order: -1; }
+  }
+</style>

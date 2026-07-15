@@ -1,0 +1,15 @@
+[
+  { "name": "Dr Axa Gonzalez", "role": "IDEA Bio Manager & Test Lead", "image": "/images/team-axa-gonzalez.jpg" },
+  { "name": "Ms Helen Wong", "role": "Automation Specialist", "image": "/images/team-helen-wong.jpg" },
+  { "name": "Mr Laurin Walther", "role": "Fermentation Specialist", "image": "/images/team-laurin-walther.jpg" },
+  { "name": "Ms Yu Sun", "role": "Fermentation Specialist", "image": "/images/team-yu-sun.jpg" },
+  { "name": "Mr Nhat Huynh", "role": "Fermentation Specialist", "image": "/images/team-nhat-huynh.jpg" },
+  { "name": "Dr Justin Chitpin", "role": "Systems Biology", "image": "/images/team-justin-chitpin.jpg" },
+  { "name": "Dr Tim McCubbin", "role": "Design & Learn Lead", "image": "/images/team-tim-mccubbin.jpg" },
+  { "name": "Dr Jerry Yang", "role": "Synthetic Biology Specialist", "image": "/images/team-jerry-yang.jpeg" },
+  { "name": "Dr Subaru Muroi", "role": "Machine Learning & AI Specialist", "image": "/images/team-subaru-muroi.jpg" },
+  { "name": "Dr Robin Palfreyman", "role": "Bioinformatician", "image": "/images/team-robin-palfreyman.jpg" },
+  { "name": "Lachlan Jeremijenko", "role": "Bioprocess Engineer", "image": "/images/team-lachlan-jeremijenko.jpg" },
+  { "name": "Sally Yukiko", "role": "Strategy, Operations / Finance", "image": "/images/team-sally-yukiko.jpg" },
+  { "name": "Catherine Varas", "role": "Software Engineer", "image": "/images/team-catherine-varas.jpg" }
+]

@@ -1,0 +1,109 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/PageHero.astro';
+
+const services = [
+  {
+    n: '01',
+    title: 'Project design',
+    body: 'IDEA Bio offers project design tailored to precise user requirements, based on our unique expertise and experience — including fermentation, multi-omics characterization, and cell design. Effective project design considers the client’s needs and the final application.',
+    img: '/images/scientists-media-bottle.jpg',
+    alt: 'Two scientists inspecting a media bottle at the bioreactors',
+  },
+  {
+    n: '02',
+    title: 'Deep cellular characterization',
+    body: 'The IDEA Bio facility has advanced equipment and expertise in fermentation, including 40 instrumented bioreactors for deep strain characterization, multi-omics analysis, sample preparation, and high-throughput cultivation.',
+    img: '/images/bioreactor-biostream-array-wide.jpg',
+    alt: 'Array of BIOSTREAM bioreactors',
+  },
+  {
+    n: '03',
+    title: 'Test your strains with us',
+    body: 'Test all of your promising new strains in a deep-well plate or a stirred-tank bioreactor to simulate performance at scale. We make all the data available to you so you can review your strain’s performance — and we help you guide the design of your next IDEA.',
+    img: '/images/researcher-microplate-automation.jpg',
+    alt: 'Researcher loading a microplate into automation',
+  },
+  {
+    n: '04',
+    title: 'Scale up confidently',
+    body: 'De-risk scale-up by robustly characterizing your process and modelling production-tank heterogeneities at lab scale using parallel bioreactors. We can design an entirely new set of strains to suit your needs and requirements.',
+    img: '/images/scientist-cleanroom-bioprocessing.jpg',
+    alt: 'Researcher in a cleanroom operating a bioprocessing rig',
+  },
+  {
+    n: '05',
+    title: 'Learn by modelling',
+    body: 'To better understand biology, we draw on expertise from across UQ and global partners to create mathematical models that guide your new design. We are implementing novel ML algorithms to query data at the deepest level.',
+    img: '/images/researcher-flow-cytometry.jpg',
+    alt: 'Researcher at a flow-cytometry analysis screen',
+  },
+];
+---
+
+<BaseLayout title="Services · IDEA Bio" description="Project design, deep cellular characterization, strain testing, confident scale-up and modelling — the IDEA Bio synthetic biology service.">
+  <PageHero
+    eyebrow="Services"
+    title="Design, test and scale — with us"
+    lead="IDEA Bio offers project design tailored to your requirements: fermentation, multi-omics characterization and cell design, backed by 40 instrumented bioreactors."
+  >
+    <a slot="actions" href="mailto:ideabio@uq.edu.au?subject=IDEA%20Bio%20enquiry" class="btn btn--primary">Submit an enquiry</a>
+    <a slot="actions" href="/projects" class="btn btn--ghost">See our projects</a>
+  </PageHero>
+
+  <section class="section">
+    <div class="container">
+      <ol class="svc-list">
+        {services.map((s) => (
+          <li class="svc" data-reveal>
+            <figure class="svc-media">
+              <img src={s.img} alt={s.alt} width="800" height="533" loading="lazy" />
+            </figure>
+            <div class="svc-copy">
+              <span class="svc-num">{s.n}</span>
+              <h2>{s.title}</h2>
+              <p>{s.body}</p>
+            </div>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .svc-list { list-style: none; padding: 0; display: flex; flex-direction: column; gap: clamp(3rem, 7vw, 6rem); }
+  .svc {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: clamp(1.75rem, 5vw, 4rem);
+    align-items: center;
+  }
+  /* alternate image side */
+  .svc:nth-child(even) .svc-media { order: 2; }
+
+  .svc-media { margin: 0; }
+  .svc-media img {
+    width: 100%;
+    aspect-ratio: 3 / 2;
+    object-fit: cover;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+  }
+  .svc-num {
+    font-family: var(--font-mono);
+    font-size: 2.4rem;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    color: color-mix(in srgb, var(--accent) 55%, var(--hairline));
+    line-height: 1;
+  }
+  .svc-copy h2 { font-size: var(--step-3); margin: 0.5rem 0 0.9rem; }
+  .svc-copy p { color: var(--muted); font-size: var(--step-0); max-width: 46ch; }
+
+  @media (max-width: 900px) {
+    .svc { grid-template-columns: 1fr; gap: 1.5rem; }
+    .svc:nth-child(even) .svc-media { order: 0; }
+    .svc-media { order: -1; }
+  }
+</style>

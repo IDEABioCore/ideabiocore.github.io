@@ -1,0 +1,460 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import MolecularField from '../components/MolecularField.astro';
+import VideoEmbed from '../components/VideoEmbed.astro';
+
+const stats = [
+  { num: '40', suffix: '', count: true, label: 'Instrumented bioreactors for deep strain characterization' },
+  { num: 'mg → kg', suffix: '', count: false, label: 'We design the genetic changes to scale products up' },
+  { num: 'Multi-omics', suffix: '', count: false, label: 'Deep cellular characterization & analysis' },
+];
+
+const partners = [
+  { name: 'AIBN', full: 'Australian Institute for Bioengineering & Nanotechnology', href: 'https://aibn.uq.edu.au/' },
+  { name: 'Bioplatforms Australia', full: 'National research infrastructure, enabled by NCRIS', href: 'https://bioplatforms.com/' },
+  { name: 'Queensland Government', full: 'Backing Queensland’s bio-manufacturing future', href: 'https://www.qld.gov.au/' },
+  { name: 'The University of Queensland', full: 'Our home institution at St Lucia, Brisbane', href: 'https://www.uq.edu.au/' },
+];
+
+const featured = [
+  {
+    kicker: 'Industry + Government',
+    title: 'Working with Amyris and the Queensland Government',
+    blurb: 'Microbial strains are the catalysts turning Queensland’s raw materials and proximity to Asian markets into a $1bn bio-manufacturing industry.',
+    img: '/images/bioreactor-biostream-array-wide.jpg',
+    alt: 'Array of BIOSTREAM bioreactors',
+  },
+  {
+    kicker: 'Synthetic Biology',
+    title: 'Brewing natural products with yeast',
+    blurb: 'Replicating the biosynthesis of rare active ingredients in Baker’s yeast — a renewable alternative to overexploiting natural sources.',
+    img: '/images/yeast-cells-3d-render.jpg',
+    alt: '3D render of yeast cells',
+  },
+  {
+    kicker: 'Sustainability',
+    title: 'Sustainable carbon with LanzaTech',
+    blurb: 'We designed our cell factories to consume greenhouse gases and recycle carbon — turning emissions into useful molecules.',
+    img: '/images/gas-manifold-valves.jpg',
+    alt: 'Gas manifold and valves',
+  },
+];
+---
+
+<BaseLayout>
+  <!-- ============ HERO ============ -->
+  <section class="hero">
+    <MolecularField />
+    <div class="hero-glow" aria-hidden="true"></div>
+
+    <div class="container hero-inner">
+      <div class="hero-copy" data-reveal>
+        <p class="eyebrow">NCRIS + UQ Biofoundry</p>
+        <h1>We aim to make biology&nbsp;useful.</h1>
+        <p class="lead hero-lead">
+          Just like an architectural design studio, <em>but for cells.</em> IDEA Bio is a
+          synthetic biology biofoundry offering services to Australian researchers and
+          businesses — from fermentation to high-throughput strain design.
+        </p>
+        <div class="hero-actions">
+          <a href="/services" class="btn btn--primary">Explore our services</a>
+          <a href="#film" class="btn btn--ghost btn-film">
+            <span class="film-ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5.5v13l11-6.5-11-6.5z"/></svg></span>
+            Watch the foundry
+          </a>
+        </div>
+      </div>
+
+      <figure class="hero-media" data-reveal>
+        <img
+          src="/images/scientists-bioreactor-lab.jpg"
+          alt="IDEA Bio scientists working at the BIOSTREAM bioreactor bench"
+          width="1000" height="667" loading="eager" fetchpriority="high"
+        />
+        <figcaption class="hero-badge">
+          <span class="dot"></span>
+          Strain engineering · AIBN, UQ
+        </figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <!-- ============ WHAT IS IDEA BIO + STATS ============ -->
+  <section class="section section--surface">
+    <div class="container intro-grid">
+      <div class="intro-head" data-reveal>
+        <p class="eyebrow">What is IDEA Bio</p>
+        <h2>A biofoundry for Australian science &amp; industry.</h2>
+      </div>
+      <div class="intro-body" data-reveal>
+        <p>
+          IDEA Bio is an <strong>NCRIS and UQ-funded biofoundry</strong> offering synthetic
+          biology services to Australian researchers and businesses — from fermentation to
+          high-throughput solutions.
+        </p>
+        <p>
+          We design the genetic changes needed to scale products from milligrams to kilograms,
+          turning concept ideas into reality.
+        </p>
+      </div>
+    </div>
+
+    <div class="container">
+      <ul class="stat-row" data-reveal>
+        {stats.map((s) => (
+          <li class="stat">
+            <span class="stat-num">
+              {s.count ? <span data-count={s.num}>0</span> : s.num}{s.suffix}
+            </span>
+            <span class="stat-label">{s.label}</span>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <!-- ============ FOUNDRY FILM ============ -->
+  <section class="section film" id="film">
+    <div class="container film-grid">
+      <div class="film-copy" data-reveal>
+        <p class="eyebrow">See inside</p>
+        <h2>A look inside the foundry</h2>
+        <p class="lead">
+          From instrumented bioreactors to high-throughput strain engineering — watch how
+          IDEA Bio turns biological ideas into products at scale.
+        </p>
+      </div>
+      <div class="film-player" data-reveal>
+        <VideoEmbed
+          id="l_Setcf-GsM"
+          title="Inside the IDEA Bio foundry"
+          poster="/images/bioreactor-biostream-array-wide.jpg"
+          posterAlt="Array of BIOSTREAM bioreactors inside the IDEA Bio foundry"
+        />
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ FEATURED PROJECTS ============ -->
+  <section class="section section--surface">
+    <div class="container">
+      <div class="feature-head" data-reveal>
+        <div>
+          <p class="eyebrow">Selected work</p>
+          <h2>Partnering to make biology work at scale</h2>
+        </div>
+        <a href="/projects" class="feature-all">All projects →</a>
+      </div>
+
+      <ul class="project-grid">
+        {featured.map((p, i) => (
+          <li class="project-card" data-reveal style={`transition-delay:${i * 90}ms`}>
+            <div class="project-media">
+              <img src={p.img} alt={p.alt} width="600" height="400" loading="lazy" />
+            </div>
+            <div class="project-body">
+              <span class="project-kicker">{p.kicker}</span>
+              <h3>{p.title}</h3>
+              <p>{p.blurb}</p>
+            </div>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <!-- ============ CULTURING IDEAS / PARTNERS ============ -->
+  <section class="section section--panel">
+    <div class="container">
+      <div class="partners-head" data-reveal>
+        <p class="eyebrow">Culturing IDEAs</p>
+        <h2>Backed by Australia’s research ecosystem</h2>
+        <p class="lead">
+          IDEA Bio is located at the AIBN and is proudly supported by our partners across
+          government, national infrastructure and academia.
+        </p>
+      </div>
+
+      <ul class="partner-grid">
+        {partners.map((p, i) => (
+          <li data-reveal style={`transition-delay:${i * 70}ms`}>
+            <a class="partner-card" href={p.href} target="_blank" rel="noopener">
+              <span class="partner-name">{p.name}</span>
+              <span class="partner-full">{p.full}</span>
+              <span class="partner-arrow" aria-hidden="true">↗</span>
+            </a>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  /* ---------------- hero ---------------- */
+  .hero {
+    position: relative;
+    overflow: clip;
+    display: flex;
+    align-items: center;
+    min-height: clamp(560px, 84vh, 840px);
+    padding-block: clamp(48px, 7vw, 96px);
+    background:
+      radial-gradient(120% 90% at 82% 0%, color-mix(in srgb, var(--accent) 9%, transparent), transparent 60%),
+      var(--bg);
+  }
+  .hero-glow {
+    position: absolute;
+    top: -20%; right: -10%;
+    width: 55vw; height: 55vw;
+    max-width: 780px; max-height: 780px;
+    background: radial-gradient(circle, color-mix(in srgb, var(--accent) 16%, transparent), transparent 68%);
+    filter: blur(30px);
+    z-index: 0;
+    pointer-events: none;
+  }
+  .hero-inner {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    grid-template-columns: 1.05fr 0.95fr;
+    gap: clamp(2rem, 5vw, 4.5rem);
+    align-items: center;
+    width: 100%;
+  }
+  .hero h1 { font-size: var(--step-5); margin-top: 1.1rem; }
+  .hero-lead { margin-top: 1.4rem; max-width: 48ch; }
+  .hero-lead em { color: var(--ink); font-style: italic; }
+  .hero-actions { display: flex; flex-wrap: wrap; gap: 0.85rem; margin-top: 2rem; }
+  .btn-film { gap: 0.6rem; }
+  .film-ic {
+    display: grid; place-items: center;
+    width: 20px; height: 20px; border-radius: 999px;
+    background: var(--accent); color: var(--on-accent);
+  }
+  .film-ic svg { width: 11px; height: 11px; margin-left: 1px; }
+
+  .hero-media { position: relative; margin: 0; }
+  .hero-media img {
+    width: 100%;
+    aspect-ratio: 3 / 2;
+    object-fit: cover;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+  }
+  .hero-media::before {
+    content: "";
+    position: absolute;
+    inset: -1px;
+    border-radius: calc(var(--radius) + 1px);
+    padding: 1px;
+    background: linear-gradient(150deg, color-mix(in srgb, var(--accent) 55%, transparent), transparent 45%);
+    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
+  }
+  .hero-badge {
+    position: absolute;
+    left: 16px; bottom: 16px;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: var(--surface);
+    color: var(--ink);
+    border: 1px solid var(--hairline);
+    border-radius: 999px;
+    padding: 0.5rem 0.9rem;
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    box-shadow: var(--shadow-sm);
+    animation: floaty 6s ease-in-out infinite;
+  }
+  .hero-badge .dot {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: var(--accent);
+    box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent) 25%, transparent);
+  }
+
+  /* ---------------- intro + stats ---------------- */
+  .intro-grid {
+    display: grid;
+    grid-template-columns: 0.9fr 1.1fr;
+    gap: clamp(1.5rem, 5vw, 4rem);
+    align-items: start;
+  }
+  .intro-body p { color: var(--muted); font-size: var(--step-1); }
+  .intro-body p + p { margin-top: 1rem; }
+  .intro-body strong { color: var(--ink); font-weight: 600; }
+
+  .stat-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.25rem;
+    list-style: none;
+    padding: 0;
+    margin-top: clamp(2.5rem, 5vw, 3.75rem);
+  }
+  .stat {
+    padding: 1.75rem;
+    background: var(--bg);
+    border: 1px solid var(--hairline);
+    border-radius: var(--radius);
+    transition: border-color .18s ease, transform .18s ease;
+  }
+  .stat:hover { border-color: color-mix(in srgb, var(--accent) 40%, var(--hairline)); transform: translateY(-3px); }
+  .stat-num {
+    display: block;
+    font-size: clamp(2rem, 1.4rem + 2vw, 2.9rem);
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    color: var(--accent-text);
+    font-variant-numeric: tabular-nums;
+    line-height: 1;
+  }
+  .stat-label { display: block; margin-top: 0.8rem; color: var(--muted); font-size: 0.96rem; }
+
+  /* ---------------- film ---------------- */
+  .film-grid {
+    display: grid;
+    grid-template-columns: 0.82fr 1.18fr;
+    gap: clamp(2rem, 5vw, 4rem);
+    align-items: center;
+  }
+  .film-copy h2 { margin: 0.9rem 0 1rem; }
+  .film-copy .lead { color: var(--muted); }
+
+  /* ---------------- featured projects ---------------- */
+  .feature-head {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 1rem;
+    flex-wrap: wrap;
+    margin-bottom: clamp(2rem, 4vw, 3rem);
+  }
+  .feature-head h2 { margin-top: 0.9rem; max-width: 20ch; }
+  .feature-all { color: var(--accent-text); font-family: var(--font-mono); font-weight: 600; text-decoration: none; font-size: 0.95rem; white-space: nowrap; }
+  .feature-all:hover { color: var(--accent); }
+
+  .project-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: clamp(1.25rem, 2.5vw, 1.75rem);
+    list-style: none;
+    padding: 0;
+  }
+  .project-card {
+    display: flex;
+    flex-direction: column;
+    background: var(--bg);
+    border: 1px solid var(--hairline);
+    border-radius: var(--radius);
+    overflow: hidden;
+    transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease;
+  }
+  .project-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow);
+    border-color: color-mix(in srgb, var(--accent) 40%, var(--hairline));
+  }
+  .project-media { aspect-ratio: 3 / 2; overflow: hidden; }
+  .project-media img { width: 100%; height: 100%; object-fit: cover; transition: transform .35s ease; }
+  .project-card:hover .project-media img { transform: scale(1.05); }
+  .project-body { padding: 1.4rem 1.5rem 1.6rem; }
+  .project-kicker {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--accent-text);
+    font-weight: 600;
+  }
+  .project-body h3 { font-size: var(--step-1); margin: 0.6rem 0 0.65rem; line-height: 1.2; }
+  .project-body p { color: var(--muted); font-size: 0.95rem; }
+
+  /* ---------------- partners ---------------- */
+  .partners-head { max-width: 640px; }
+  .partners-head h2 { margin: 0.9rem 0 1rem; }
+  .partners-head .lead { color: var(--muted); }
+  .partner-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1.1rem;
+    list-style: none;
+    padding: 0;
+    margin-top: clamp(2rem, 4vw, 3rem);
+  }
+  .partner-card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    height: 100%;
+    padding: 1.5rem 1.4rem;
+    background: var(--surface);
+    border: 1px solid var(--hairline);
+    border-radius: var(--radius);
+    text-decoration: none;
+    color: var(--ink);
+    transition: transform .18s ease, border-color .18s ease, box-shadow .18s ease;
+  }
+  .partner-card:hover {
+    transform: translateY(-4px);
+    border-color: color-mix(in srgb, var(--accent) 45%, var(--hairline));
+    box-shadow: var(--shadow-sm);
+  }
+  .partner-name { font-weight: 700; letter-spacing: -0.01em; line-height: 1.2; }
+  .partner-full { color: var(--muted); font-size: 0.88rem; }
+  .partner-arrow {
+    position: absolute; top: 1.2rem; right: 1.3rem;
+    color: var(--accent-text);
+    opacity: 0; transform: translate(-4px, 4px);
+    transition: opacity .18s ease, transform .18s ease;
+  }
+  .partner-card:hover .partner-arrow { opacity: 1; transform: none; }
+
+  /* ---------------- responsive ---------------- */
+  @media (max-width: 980px) {
+    .hero-inner { grid-template-columns: 1fr; }
+    .hero-media { order: -1; }
+    .intro-grid { grid-template-columns: 1fr; }
+    .film-grid { grid-template-columns: 1fr; }
+    .project-grid { grid-template-columns: 1fr 1fr; }
+    .partner-grid { grid-template-columns: 1fr 1fr; }
+  }
+  @media (max-width: 620px) {
+    .stat-row { grid-template-columns: 1fr; }
+    .project-grid { grid-template-columns: 1fr; }
+    .partner-grid { grid-template-columns: 1fr; }
+  }
+</style>
+
+<script is:inline>
+  /* animated count-up for numeric stats */
+  (function () {
+    var els = document.querySelectorAll('[data-count]');
+    if (!els.length) return;
+    var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    function run(el) {
+      var target = parseFloat(el.getAttribute('data-count')) || 0;
+      if (reduce) { el.textContent = String(target); return; }
+      var dur = 1100, start = 0, t0 = null;
+      function tick(ts) {
+        if (!t0) t0 = ts;
+        var p = Math.min((ts - t0) / dur, 1);
+        var eased = 1 - Math.pow(1 - p, 3);
+        el.textContent = String(Math.round(start + (target - start) * eased));
+        if (p < 1) requestAnimationFrame(tick);
+      }
+      requestAnimationFrame(tick);
+    }
+    if (!('IntersectionObserver' in window)) { els.forEach(run); return; }
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) {
+        if (en.isIntersecting) { run(en.target); io.unobserve(en.target); }
+      });
+    }, { threshold: 0.5 });
+    els.forEach(function (el) { io.observe(el); });
+  })();
+</script>

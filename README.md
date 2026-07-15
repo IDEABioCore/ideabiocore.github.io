@@ -1,0 +1,60 @@
+# IDEA Bio — website
+
+Marketing site for **IDEA Bio**, a synthetic biology biofoundry at the AIBN, The University of Queensland.
+Built with **[Astro](https://astro.build/)** — fast, static, and simple enough that anyone can maintain it.
+
+## Tech stack
+
+- **Astro 5** (static output — plain HTML/CSS/JS at build time, minimal JavaScript shipped)
+- **Plain CSS with design tokens** (no Tailwind) — the whole look is driven by CSS variables in one file
+- **Self-hosted fonts** (Fraunces, Geist, Geist Mono) — no external CDN
+- Deploys to **Vercel** with zero config
+
+## Run it locally
+
+```bash
+npm install       # first time only
+npm run dev       # start the dev server → http://localhost:4321
+```
+
+Other commands:
+
+```bash
+npm run build     # build the static site into dist/
+npm run preview   # preview the production build locally
+```
+
+## Project structure
+
+```
+src/
+  layouts/BaseLayout.astro     # <head>, fonts, header + footer, theme + reveal scripts
+  components/                  # Header, Footer, PageHero, MolecularField, VideoEmbed
+  pages/                       # one file per page: index, about, services, projects, team, contact
+  content/projects/*.md        # one Markdown file per project (the Projects page)
+  data/team.json               # the team roster (Team page)
+  styles/global.css            # design tokens (colours, fonts, spacing) + base styles
+public/
+  images/                      # all photos & logos (see ASSETS.md for the map)
+```
+
+## How to edit common things
+
+| I want to…                     | Edit this |
+|--------------------------------|-----------|
+| Change page text               | the matching file in `src/pages/` |
+| Add / edit a **project**       | create or edit a `.md` file in `src/content/projects/` |
+| Add / edit a **team member**   | `src/data/team.json` |
+| Swap an **image**              | drop it in `public/images/` and reference `/images/your-file.jpg` (`ASSETS.md` lists them all) |
+| Change **colours or fonts**    | the `:root` tokens at the top of `src/styles/global.css` |
+
+The colour system is defined once in `global.css` as CSS custom properties (light + dark themes),
+so re-theming the entire site means editing that one block.
+
+## Deploy (Vercel)
+
+1. Push this repo to GitHub.
+2. In [Vercel](https://vercel.com/), **Add New → Project** and import the repo.
+3. Vercel auto-detects Astro (build `astro build`, output `dist/`). Click **Deploy**.
+
+`old/` (the archived previous Wix site) is excluded from git and from deploys.

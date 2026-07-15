@@ -1,0 +1,66 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/PageHero.astro';
+import team from '../data/team.json';
+---
+
+<BaseLayout title="Meet our Team · IDEA Bio" description="The IDEA Bio team — fermentation, automation, systems biology, synthetic biology, machine learning and bioprocess engineering at the AIBN.">
+  <PageHero
+    eyebrow="Team"
+    title="Meet the IDEA Bio team"
+    lead="The people designing, testing and scaling biology at the Australian Institute for Bioengineering and Nanotechnology."
+    image="/images/team-group-photo.jpg"
+    imageAlt="The IDEA Bio team outside the AIBN building"
+  />
+
+  <section class="section">
+    <div class="container">
+      <ul class="team-grid">
+        {team.map((m, i) => (
+          <li class="member" data-reveal style={`transition-delay:${(i % 4) * 60}ms`}>
+            <div class="member-photo">
+              <img src={m.image} alt={`Portrait of ${m.name}`} width="400" height="480" loading="lazy" />
+            </div>
+            <h2 class="member-name">{m.name}</h2>
+            <p class="member-role">{m.role}</p>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .team-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: clamp(1.25rem, 2.5vw, 1.9rem);
+    list-style: none;
+    padding: 0;
+  }
+  .member { display: flex; flex-direction: column; }
+  .member-photo {
+    aspect-ratio: 4 / 5;
+    overflow: hidden;
+    border-radius: var(--radius);
+    border: 1px solid var(--hairline);
+    background: var(--surface-2);
+  }
+  .member-photo img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    filter: saturate(1.02);
+    transition: transform .4s ease;
+  }
+  .member:hover .member-photo img { transform: scale(1.04); }
+  .member-name { font-size: var(--step-0); font-weight: 700; margin: 0.9rem 0 0.15rem; letter-spacing: -0.01em; }
+  .member-role {
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    color: var(--accent-text);
+    line-height: 1.35;
+  }
+
+  @media (max-width: 860px) { .team-grid { grid-template-columns: repeat(3, 1fr); } }
+  @media (max-width: 620px) { .team-grid { grid-template-columns: repeat(2, 1fr); } }
+</style>

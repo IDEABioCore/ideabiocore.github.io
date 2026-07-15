@@ -1,0 +1,109 @@
+---
+// Animated molecular network — a lightweight vanilla <canvas> animation.
+// Drifting nodes connect with lines when close, echoing the IDEA Bio molecule
+// mark. No libraries. Pauses off-screen and renders a single static frame when
+// the visitor prefers reduced motion.
+---
+<canvas id="molecular-field" class="molecular-field" aria-hidden="true"></canvas>
+
+<style>
+  .molecular-field {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    display: block;
+    z-index: 0;
+    pointer-events: none;
+    opacity: 0.9;
+    mask-image: linear-gradient(to bottom, #000 60%, transparent 100%);
+  }
+</style>
+
+<script is:inline>
+  (function () {
+    var c = document.getElementById('molecular-field');
+    if (!c || !c.getContext) return;
+    var ctx = c.getContext('2d');
+    var host = c.parentElement;
+    var dpr = Math.min(window.devicePixelRatio || 1, 2);
+    var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var LINK = 132;
+    var w = 0, h = 0, nodes = [], raf = 0, running = false;
+
+    function isDark() {
+      var t = document.documentElement.getAttribute('data-theme');
+      if (t) return t === 'dark';
+      return window.matchMedia('(prefers-color-scheme: dark)').matches;
+    }
+    function stroke(a) { return (isDark() ? 'rgba(139,120,255,' : 'rgba(109,74,255,') + a + ')'; }
+    function fill(a) { return (isDark() ? 'rgba(160,145,255,' : 'rgba(83,38,214,') + a + ')'; }
+
+    function resize() {
+      var r = host.getBoundingClientRect();
+      w = r.width; h = r.height;
+      c.width = Math.round(w * dpr); c.height = Math.round(h * dpr);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      var count = Math.max(22, Math.min(64, Math.floor((w * h) / 17000)));
+      nodes = [];
+      for (var i = 0; i < count; i++) {
+        nodes.push({
+          x: Math.random() * w, y: Math.random() * h,
+          vx: (Math.random() - 0.5) * 0.32, vy: (Math.random() - 0.5) * 0.32,
+          r: Math.random() * 1.6 + 0.8,
+        });
+      }
+    }
+
+    function render() {
+      ctx.clearRect(0, 0, w, h);
+      for (var i = 0; i < nodes.length; i++) {
+        var n = nodes[i];
+        for (var j = i + 1; j < nodes.length; j++) {
+          var m = nodes[j], dx = n.x - m.x, dy = n.y - m.y, d = Math.sqrt(dx * dx + dy * dy);
+          if (d < LINK) {
+            ctx.strokeStyle = stroke((1 - d / LINK) * 0.45);
+            ctx.lineWidth = 0.7;
+            ctx.beginPath(); ctx.moveTo(n.x, n.y); ctx.lineTo(m.x, m.y); ctx.stroke();
+          }
+        }
+      }
+      for (var k = 0; k < nodes.length; k++) {
+        var p = nodes[k];
+        ctx.fillStyle = fill(0.85);
+        ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, 6.2832); ctx.fill();
+      }
+    }
+
+    function loop() {
+      for (var i = 0; i < nodes.length; i++) {
+        var n = nodes[i];
+        n.x += n.vx; n.y += n.vy;
+        if (n.x < 0 || n.x > w) n.vx *= -1;
+        if (n.y < 0 || n.y > h) n.vy *= -1;
+      }
+      render();
+      raf = requestAnimationFrame(loop);
+    }
+    function start() { if (running) return; running = true; loop(); }
+    function stop() { running = false; cancelAnimationFrame(raf); }
+
+    resize();
+    if (reduce) {
+      render();
+    } else {
+      start();
+      if ('IntersectionObserver' in window) {
+        new IntersectionObserver(function (e) {
+          if (e[0].isIntersecting) start(); else stop();
+        }, { threshold: 0 }).observe(host);
+      }
+    }
+
+    var t;
+    window.addEventListener('resize', function () {
+      clearTimeout(t);
+      t = setTimeout(function () { resize(); if (reduce) render(); }, 200);
+    });
+  })();
+</script>
