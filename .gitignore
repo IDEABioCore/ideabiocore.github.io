@@ -11,6 +11,10 @@ old/
 # throwaway palette comparison used during design
 palette-preview.html
 
+# unused heavy source video (64 MB .avi — the foundry video is a YouTube embed).
+# .avi doesn't play in browsers anyway; convert to MP4/WebM if you ever need it on-site.
+public/videos/
+
 # misc
 .DS_Store
 *.log

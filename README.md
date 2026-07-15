@@ -51,10 +51,15 @@ public/
 The colour system is defined once in `global.css` as CSS custom properties (light + dark themes),
 so re-theming the entire site means editing that one block.
 
-## Deploy (Vercel)
+## Deploy (GitHub Pages)
 
-1. Push this repo to GitHub.
-2. In [Vercel](https://vercel.com/), **Add New → Project** and import the repo.
-3. Vercel auto-detects Astro (build `astro build`, output `dist/`). Click **Deploy**.
+The site auto-deploys via GitHub Actions (`.github/workflows/deploy.yml`) on every push to `main`.
 
-`old/` (the archived previous Wix site) is excluded from git and from deploys.
+**One-time setup:**
+1. The repo is an **org site** named `ideabiocore.github.io`, so the site is served at the root: `https://ideabiocore.github.io/`.
+2. In the repo: **Settings → Pages → Build and deployment → Source → GitHub Actions**.
+3. Push to `main`. The workflow builds with Astro and publishes. Every later push redeploys automatically.
+
+**Custom domain (later):** add a `public/CNAME` file containing `www.ideabio.org.au`, point the domain's DNS at GitHub Pages, and update `site` in `astro.config.mjs`.
+
+`old/` (the archived previous Wix site) and the unused source video are excluded from git.
