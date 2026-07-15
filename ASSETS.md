@@ -7,6 +7,7 @@ The saved `*_files/` folders were left untouched — those are the archived Wix 
 ## Team headshots (`team-*`)
 Order and roles taken from **Meet our Team**.
 
+
 | File | Person | Role |
 |---|---|---|
 | `team-axa-gonzalez.jpg` | Dr Axa Gonzalez | IDEA Bio Manager & Test Lead |
