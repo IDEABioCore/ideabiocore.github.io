@@ -25,8 +25,8 @@
   --shadow-sm:   0 10px 24px -16px rgba(24, 18, 55, 0.32);
 
   /* --- type --- */
-  --font-display: 'Fraunces Variable', 'Fraunces', Georgia, 'Times New Roman', serif;
   --font-sans: 'Geist Sans', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --font-display: 'Geist Sans', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
   --font-mono: 'Geist Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
 
   /* fluid type scale */
@@ -107,13 +107,13 @@ button { font: inherit; color: inherit; cursor: pointer; }
 
 h1, h2, h3, h4 {
   font-family: var(--font-display);
-  font-weight: 600;
-  line-height: 1.1;
-  letter-spacing: -0.015em;
+  font-weight: 700;
+  line-height: 1.07;
+  letter-spacing: -0.025em;
   text-wrap: balance;
   color: var(--ink);
-  font-optical-sizing: auto;
 }
+h1 { font-weight: 800; letter-spacing: -0.032em; }
 h1 { font-size: var(--step-5); }
 h2 { font-size: var(--step-3); }
 h3 { font-size: var(--step-2); }

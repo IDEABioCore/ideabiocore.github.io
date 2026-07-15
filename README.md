@@ -7,7 +7,7 @@ Built with **[Astro](https://astro.build/)** — fast, static, and simple enough
 
 - **Astro 5** (static output — plain HTML/CSS/JS at build time, minimal JavaScript shipped)
 - **Plain CSS with design tokens** (no Tailwind) — the whole look is driven by CSS variables in one file
-- **Self-hosted fonts** (Fraunces, Geist, Geist Mono) — no external CDN
+- **Self-hosted fonts** (Geist, Geist Mono) — no external CDN
 - Deploys to **Vercel** with zero config
 
 ## Run it locally
