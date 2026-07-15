@@ -47,7 +47,7 @@ const services = [
     title="Design, test and scale — with us"
     lead="IDEA Bio offers project design tailored to your requirements: fermentation, multi-omics characterization and cell design, backed by 40 instrumented bioreactors."
   >
-    <a slot="actions" href="mailto:ideabio@uq.edu.au?subject=IDEA%20Bio%20enquiry" class="btn btn--primary">Submit an enquiry</a>
+    <a slot="actions" href="https://app.smartsheet.com/b/form/f40d8ae24f0c4b5c87d7eacf2daf1d3d" target="_blank" rel="noopener" class="btn btn--primary">Submit an enquiry</a>
     <a slot="actions" href="/projects" class="btn btn--ghost">See our projects</a>
   </PageHero>
 
@@ -67,6 +67,16 @@ const services = [
           </li>
         ))}
       </ol>
+    </div>
+  </section>
+
+  <section class="section svc-cta" data-reveal>
+    <div class="container">
+      <div class="svc-cta__box">
+        <h2>Have an IDEA you want to test?</h2>
+        <p>Tell us about your strains, your process and your goals. We'll help you design, test and scale it.</p>
+        <a href="https://app.smartsheet.com/b/form/f40d8ae24f0c4b5c87d7eacf2daf1d3d" target="_blank" rel="noopener" class="btn btn--primary">Submit an enquiry</a>
+      </div>
     </div>
   </section>
 </BaseLayout>
@@ -106,4 +116,19 @@ const services = [
     .svc:nth-child(even) .svc-media { order: 0; }
     .svc-media { order: -1; }
   }
+
+  .svc-cta__box {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 1rem;
+    padding: clamp(2.5rem, 6vw, 4rem) clamp(1.5rem, 5vw, 3rem);
+    background: var(--surface);
+    border: 1px solid var(--hairline);
+    border-radius: var(--radius);
+  }
+  .svc-cta__box h2 { font-size: var(--step-2); margin: 0; }
+  .svc-cta__box p { color: var(--muted); max-width: 48ch; margin: 0; }
+  .svc-cta__box .btn { margin-top: 0.5rem; }
 </style>
