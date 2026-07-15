@@ -4,6 +4,7 @@
   { "name": "Mr Laurin Walther", "role": "Fermentation Specialist", "image": "/images/team-laurin-walther.jpg" },
   { "name": "Ms Yu Sun", "role": "Fermentation Specialist", "image": "/images/team-yu-sun.jpg" },
   { "name": "Mr Nhat Huynh", "role": "Fermentation Specialist", "image": "/images/team-nhat-huynh.jpg" },
+  { "name": "Dr Neha Lal", "role": "Fermentation Scientist", "image": "/images/team-neha-lal.jpg", "bio": "Neha is a Fermentation Scientist at IDEA Bio, where she develops precision fermentation processes for recombinant protein production using engineered yeast strains. She holds a Bachelor of Engineering (Honours) in Chemical and Biological Engineering and a PhD in Engineering, where her research focused on bioprocess engineering. Her work focuses on fermentation process development and optimisation, including process scale-up. Neha is passionate about sustainable biomanufacturing and enjoys collaborating across academia and industry to develop innovative bioprocesses." },
   { "name": "Dr Justin Chitpin", "role": "Systems Biology", "image": "/images/team-justin-chitpin.jpg" },
   { "name": "Dr Tim McCubbin", "role": "Design & Learn Lead", "image": "/images/team-tim-mccubbin.jpg" },
   { "name": "Dr Jerry Yang", "role": "Synthetic Biology Specialist", "image": "/images/team-jerry-yang.jpeg" },

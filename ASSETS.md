@@ -15,6 +15,7 @@ Order and roles taken from **Meet our Team**.
 | `team-laurin-walther.jpg` | Mr Laurin Walther | Fermentation Specialist |
 | `team-yu-sun.jpg` | Ms Yu Sun | Fermentation Specialist |
 | `team-nhat-huynh.jpg` | Mr Nhat Huynh | Fermentation Specialist |
+| `team-neha-lal.jpg` | Dr Neha Lal | Fermentation Scientist |
 | `team-justin-chitpin.jpg` | Dr Justin Chitpin | Systems Biology |
 | `team-tim-mccubbin.jpg` | Dr Tim McCubbin | Design & Learn Lead |
 | `team-jerry-yang.jpeg` | Dr Jerry Yang | Synthetic Biology Specialist |
