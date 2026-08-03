@@ -3,10 +3,9 @@ import { defineConfig } from 'astro/config';
 
 // Static site (default output) — built by GitHub Actions and served by GitHub Pages.
 //
-// Deployed as an ORG SITE at the repo `ideabiocore.github.io`, so it lives at the
-// root (https://ideabiocore.github.io/) and every /path and /images/... link works
-// as-is. When the custom domain is ready, point DNS at Pages and add a
-// `public/CNAME` file containing `www.ideabio.org.au`, then update `site` below.
+// Deployed as an ORG SITE at the repo `ideabiocore.github.io`, served from the custom
+// domain in `public/CNAME`. Everything lives at the root, so /path and /images/... links
+// work as-is. `www.ideabio.org.au` is 301-redirected to the apex by GitHub Pages.
 export default defineConfig({
-  site: 'https://ideabiocore.github.io',
+  site: 'https://ideabio.org.au',
 });

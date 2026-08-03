@@ -1,0 +1,132 @@
+---
+// Liquid handler — an 8-channel head steps across a 96-well plate, dispensing a
+// column at a time until the plate is full, then the plate is swapped and it
+// starts again. Pure CSS + SVG, no JavaScript.
+//
+// The head uses steps(12) rather than a smooth translate: the discrete
+// column-to-column jump is what makes it read as a robot instead of a slider.
+//
+// As in ColonyGrowth, each column's fill time is baked into its own keyframes
+// rather than expressed as an animation-delay, so the whole plate clears on one
+// synchronised beat at the end of the cycle.
+interface Props {
+  label?: string;
+  class?: string;
+}
+const { label = 'An eight-channel liquid handler stepping across a 96-well plate, dispensing one column at a time.', class: className } = Astro.props;
+
+const COLS = 12, ROWS = 8;
+const X0 = 32, DX = 17.5;
+const Y0 = 82, DY = 13.5;
+const TRAVEL = (COLS - 1) * DX;   // 192.5
+
+const wells = [];
+for (let c = 0; c < COLS; c++) {
+  for (let r = 0; r < ROWS; r++) {
+    wells.push({ cx: X0 + c * DX, cy: Y0 + r * DY, col: c });
+  }
+}
+const tips = Array.from({ length: ROWS }, (_, r) => Y0 + r * DY);
+
+// Head reaches column c at 78% * c/(COLS-1) of the cycle; the clear at 86–92%
+// is shared by every column.
+const fillKeyframes = Array.from({ length: COLS }, (_, c) => {
+  const p = (78 * c) / (COLS - 1);
+  return `@keyframes lh-f${c}{` +
+    `0%,${p.toFixed(2)}%{opacity:0;transform:scale(.3)}` +
+    `${(p + 1.6).toFixed(2)}%{opacity:1;transform:scale(1)}` +
+    `86%{opacity:1;transform:scale(1)}` +
+    `92%,100%{opacity:0;transform:scale(.3)}}`;
+}).join('');
+---
+
+<figure class:list={['lh-anim', className]}>
+  <svg viewBox="0 0 260 212" role="img" aria-label={label} class="lh-svg">
+    <title>{label}</title>
+
+    <circle class="lh-glow" cx="200" cy="48" r="62" />
+
+    <!-- gantry rail -->
+    <rect class="lh-rail" x="18" y="30" width="224" height="7" rx="3.5" />
+
+    <!-- plate -->
+    <rect class="lh-plate" x="18" y="68" width="224" height="124" rx="9" />
+    <rect class="lh-plate-notch" x="18" y="68" width="12" height="12" rx="4" />
+
+    {wells.map((w) => (
+      <g>
+        <circle class="lh-well" cx={w.cx} cy={w.cy} r="5" />
+        <circle class="lh-fill" cx={w.cx} cy={w.cy} r="3.7" style={`animation-name:lh-f${w.col}`} />
+      </g>
+    ))}
+
+    <!-- the head: carriage on the rail plus an 8-channel tip bar -->
+    <g class="lh-head">
+      <rect class="lh-carriage" x={X0 - 11} y="22" width="22" height="23" rx="5" />
+      <line class="lh-post" x1={X0} y1="45" x2={X0} y2="70" />
+      <rect class="lh-bar" x={X0 - 7} y="74" width="14" height={(ROWS - 1) * DY + 16} rx="7" />
+      <g class="lh-tips">
+        {tips.map((y) => <circle class="lh-tip" cx={X0} cy={y} r="3" />)}
+      </g>
+    </g>
+  </svg>
+</figure>
+
+<style set:html={fillKeyframes}></style>
+
+<style>
+  .lh-anim { margin: 0; }
+  .lh-svg { width: 100%; height: auto; overflow: visible; }
+
+  /* ---------- static appearance ---------- */
+  .lh-glow { fill: color-mix(in srgb, var(--accent) 12%, transparent); filter: blur(24px); }
+  .lh-rail { fill: var(--surface-2); stroke: var(--hairline); stroke-width: 1.5; }
+  .lh-plate { fill: var(--surface-2); stroke: var(--hairline); stroke-width: 2.5; }
+  .lh-plate-notch { fill: var(--hairline); }
+  .lh-well { fill: var(--surface); stroke: var(--hairline); stroke-width: 1.2; }
+  .lh-fill {
+    fill: color-mix(in srgb, var(--accent) 62%, transparent);
+    transform-box: fill-box;
+    transform-origin: center;
+  }
+  .lh-carriage { fill: var(--muted); }
+  .lh-post { stroke: var(--muted); stroke-width: 3; stroke-linecap: round; }
+  .lh-bar { fill: color-mix(in srgb, var(--muted) 55%, var(--surface)); stroke: var(--muted); stroke-width: 1.5; }
+  .lh-tip { fill: var(--accent); }
+
+  /* ---------- motion ---------- */
+  /* steps() is the point: a discrete column-to-column jump reads as a machine */
+  @keyframes lh-step {
+    0%   { transform: translateX(0); }
+    78%  { transform: translateX(192.5px); }
+    88%  { transform: translateX(192.5px); }
+    100% { transform: translateX(0); }
+  }
+  @keyframes lh-dispense {
+    0%, 100% { transform: scaleY(1); opacity: 0.85; }
+    45%      { transform: scaleY(1.5); opacity: 1; }
+  }
+
+  .lh-head {
+    animation: lh-step 7s steps(12, end) infinite;
+  }
+  /* one pulse per column dwell: 7s × 78% ÷ 11 hops */
+  .lh-tips {
+    transform-box: fill-box;
+    transform-origin: center;
+    animation: lh-dispense 0.496s ease-in-out infinite;
+  }
+  .lh-fill {
+    animation-duration: 7s;
+    animation-timing-function: ease-out;
+    animation-iteration-count: infinite;
+  }
+
+  /* Drop the animations outright and show a full plate with the head parked. */
+  @media (prefers-reduced-motion: reduce) {
+    .lh-head, .lh-tips, .lh-fill { animation: none; }
+    .lh-head { transform: translateX(192.5px); }
+    .lh-tips { transform: none; }
+    .lh-fill { opacity: 1; transform: none; }
+  }
+</style>

@@ -1,0 +1,125 @@
+---
+// Colony — cells divide outward across the plate until it is confluent, then
+// the plate clears in one beat and starts again. Pure CSS + SVG, no JavaScript.
+//
+// Positions come from a phyllotaxis (golden-angle) spiral, so the disc fills
+// evenly and index order runs centre → rim: growing the cells in index order
+// reads as a colony expanding from a founder.
+//
+// Two nested transforms, on purpose. The <g> carries the division pop, the
+// <circle> inside carries a continuous breathe — one element cannot hold both,
+// since the later `transform` would simply win.
+//
+// Every cell shares one duration and no delay, and its appearance time is baked
+// into its own keyframes instead. That is what keeps the plate clearing in a
+// single synchronised beat — per-cell `animation-delay` would desynchronise the
+// reset and the colony would blink out in the same order it grew.
+interface Props {
+  label?: string;
+  class?: string;
+}
+const { label = 'Cells dividing outward across a culture plate until it is confluent, then starting over.', class: className } = Astro.props;
+
+const N = 64;
+const WAVES = 16;
+const CX = 110, CY = 110, R = 78;
+const GOLDEN = Math.PI * (3 - Math.sqrt(5));
+
+const cells = Array.from({ length: N }, (_, i) => {
+  const frac = (i + 0.5) / N;
+  const r = R * Math.sqrt(frac);          // sqrt keeps the density even
+  const a = i * GOLDEN;
+  return {
+    cx: +(CX + r * Math.cos(a)).toFixed(2),
+    cy: +(CY + r * Math.sin(a)).toFixed(2),
+    rr: +(4.2 + (((i * 37) % 11) / 11) * 2.3).toFixed(2),
+    wave: Math.min(WAVES - 1, Math.floor(frac * WAVES)),
+    pulse: +(((i * 29) % 21) / 10).toFixed(2),   // 0–2.0 s breathe offset
+  };
+});
+
+// One keyframe set per beat. Growth runs from 4% to 78% of the cycle; the hold
+// and the clear at 88–96% are identical across every wave, so the whole plate
+// resets together.
+const START = 4, END = 78;
+const waveKeyframes = Array.from({ length: WAVES }, (_, w) => {
+  const p = START + ((END - START) * w) / (WAVES - 1);
+  return `@keyframes col-w${w}{` +
+    `0%,${p.toFixed(2)}%{transform:scale(0);opacity:0}` +
+    `${(p + 2.2).toFixed(2)}%{transform:scale(1.45);opacity:1}` +
+    `${(p + 4.6).toFixed(2)}%{transform:scale(1);opacity:1}` +
+    `88%{transform:scale(1);opacity:1}` +
+    `96%,100%{transform:scale(.4);opacity:0}}`;
+}).join('');
+---
+
+<figure class:list={['colony-anim', className]}>
+  <svg viewBox="0 0 220 220" role="img" aria-label={label} class="colony-svg">
+    <title>{label}</title>
+
+    <circle class="col-glow" cx="110" cy="110" r="86" />
+
+    <circle class="col-rim" cx="110" cy="110" r="98" />
+    <circle class="col-agar" cx="110" cy="110" r="90" />
+    <path class="col-sheen" d="M46,74 A82,82 0 0 1 128,26" />
+
+    <g class="col-cells">
+      {cells.map((c) => (
+        <g class="col-cell" style={`animation-name:col-w${c.wave}`}>
+          <circle class="col-dot" cx={c.cx} cy={c.cy} r={c.rr} style={`animation-delay:-${c.pulse}s`} />
+        </g>
+      ))}
+    </g>
+  </svg>
+</figure>
+
+<style set:html={waveKeyframes}></style>
+
+<style>
+  .colony-anim { margin: 0; }
+  .colony-svg { width: 100%; height: auto; overflow: visible; }
+
+  /* ---------- static appearance ---------- */
+  .col-glow { fill: color-mix(in srgb, var(--accent) 12%, transparent); filter: blur(26px); }
+  .col-rim { fill: var(--surface-2); stroke: var(--hairline); stroke-width: 2.5; }
+  .col-agar { fill: color-mix(in srgb, var(--accent) 5%, var(--surface)); }
+  .col-sheen { fill: none; stroke: var(--surface); stroke-width: 7; stroke-linecap: round; opacity: 0.5; }
+  .col-dot { fill: color-mix(in srgb, var(--accent) 62%, transparent); }
+
+  /* ---------- motion ---------- */
+  @keyframes col-breathe {
+    0%, 100% { transform: scale(1); }
+    50%      { transform: scale(1.22); }
+  }
+  /* the plate on an orbital shaker — this is what keeps the whole field moving
+     rather than 64 individually twitching dots */
+  @keyframes col-orbit {
+    0%   { transform: translate(5px, 0); }
+    25%  { transform: translate(0, 5px); }
+    50%  { transform: translate(-5px, 0); }
+    75%  { transform: translate(0, -5px); }
+    100% { transform: translate(5px, 0); }
+  }
+
+  .col-cells { animation: col-orbit 2.8s linear infinite; }
+
+  /* animation-name is set per cell inline; the wave keyframes are generated above */
+  .col-cell {
+    transform-box: fill-box;
+    transform-origin: center;
+    animation-duration: 9s;
+    animation-timing-function: cubic-bezier(.34, 1.56, .64, 1);
+    animation-iteration-count: infinite;
+  }
+  /* negative delays, so every cell is already mid-breathe on first paint */
+  .col-dot {
+    transform-box: fill-box;
+    transform-origin: center;
+    animation: col-breathe 2.4s ease-in-out infinite;
+  }
+
+  /* Drop the animations outright and show the confluent plate. */
+  @media (prefers-reduced-motion: reduce) {
+    .col-cells, .col-cell, .col-dot { animation: none; transform: none; opacity: 1; }
+  }
+</style>

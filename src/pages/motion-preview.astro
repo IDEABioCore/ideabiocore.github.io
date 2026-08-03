@@ -1,0 +1,145 @@
+---
+// PREVIEW ONLY — not linked from the nav and not wired into any team bio yet.
+// This page exists so the three loops in src/components/animations/ can be
+// reviewed in light and dark before they go anywhere near the Team page.
+// Delete this file (or leave it unlinked) once the animations are placed.
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/PageHero.astro';
+import Bioreactor from '../components/animations/Bioreactor.astro';
+import OmicsStack from '../components/animations/OmicsStack.astro';
+import ColonyGrowth from '../components/animations/ColonyGrowth.astro';
+import LiquidHandler from '../components/animations/LiquidHandler.astro';
+
+const specs = [
+  {
+    eyebrow: 'Fermentation',
+    name: 'Bioreactor',
+    cycle: '13 s',
+    note: 'The impeller turns, the surface ripples and the sparger streams constantly; underneath, the broth clouds over across a full batch — lag, exponential, stationary — then harvests through the outlet and refills with clear medium.',
+  },
+  {
+    eyebrow: 'Modelling',
+    name: 'Multi-omic stack',
+    cycle: 'continuous',
+    note: 'Three live traces scrolling at different rates, so RNA, protein and metabolite stay permanently out of phase. A read head sweeps the stack every 7 s.',
+  },
+  {
+    eyebrow: 'Automation',
+    name: 'Liquid handler',
+    cycle: '7 s',
+    note: 'An eight-channel head steps column by column across a 96-well plate, dispensing as it goes, until the plate is full and a fresh one is loaded.',
+  },
+  {
+    eyebrow: 'Strains',
+    name: 'Colony',
+    cycle: '9 s',
+    note: 'Cells divide outward from a founder along a golden-angle spiral until the plate is confluent, breathing all the while, then it clears in one beat and starts again.',
+  },
+];
+---
+
+<BaseLayout
+  title="Motion preview · IDEA Bio"
+  description="Internal preview of the three looping profile animations."
+>
+  <PageHero
+    eyebrow="Internal preview"
+    title="Profile animations"
+    lead="Three loops, one per profile. Not yet placed next to any bio — this page exists only to review them. Toggle the theme in the header to check both palettes."
+  />
+
+  <section class="section">
+    <div class="container">
+      <ul class="anim-grid">
+        <li class="anim-card surface-card" data-reveal>
+          <div class="anim-stage"><Bioreactor /></div>
+          <p class="eyebrow eyebrow--plain">{specs[0].eyebrow} · {specs[0].cycle}</p>
+          <h2 class="anim-name">{specs[0].name}</h2>
+          <p class="anim-note">{specs[0].note}</p>
+        </li>
+
+        <li class="anim-card surface-card" data-reveal style="transition-delay:60ms">
+          <div class="anim-stage"><OmicsStack /></div>
+          <p class="eyebrow eyebrow--plain">{specs[1].eyebrow} · {specs[1].cycle}</p>
+          <h2 class="anim-name">{specs[1].name}</h2>
+          <p class="anim-note">{specs[1].note}</p>
+        </li>
+
+        <li class="anim-card surface-card" data-reveal style="transition-delay:120ms">
+          <div class="anim-stage"><LiquidHandler /></div>
+          <p class="eyebrow eyebrow--plain">{specs[2].eyebrow} · {specs[2].cycle}</p>
+          <h2 class="anim-name">{specs[2].name}</h2>
+          <p class="anim-note">{specs[2].note}</p>
+        </li>
+
+        <li class="anim-card surface-card" data-reveal style="transition-delay:180ms">
+          <div class="anim-stage"><ColonyGrowth /></div>
+          <p class="eyebrow eyebrow--plain">{specs[3].eyebrow} · {specs[3].cycle}</p>
+          <h2 class="anim-name">{specs[3].name}</h2>
+          <p class="anim-note">{specs[3].note}</p>
+        </li>
+      </ul>
+
+      <p class="anim-foot">
+        All three are pure CSS and inline SVG — no JavaScript, no external requests.
+        Every colour comes from a design token, so they follow the theme.
+        Under <code>prefers-reduced-motion</code> each one settles into a readable
+        static frame instead of stopping mid-cycle.
+      </p>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .anim-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: clamp(1.25rem, 2.5vw, 1.9rem);
+    list-style: none;
+    padding: 0;
+  }
+  .anim-card {
+    display: flex;
+    flex-direction: column;
+    padding: clamp(1.15rem, 2.5vw, 1.6rem);
+  }
+  .anim-stage {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    /* fixed height so the three cards line up despite very different aspects */
+    height: 300px;
+    padding: 1.25rem;
+    margin-bottom: 1.15rem;
+    border-radius: var(--radius-sm);
+    background: var(--bg);
+    border: 1px solid var(--hairline);
+  }
+  /* The components default to width:100% so they fill a bio column; here a fixed
+     height drives and the viewBox aspect sets the width. It has to be an absolute
+     length — a centred flex/grid item has an indefinite height, so `height:100%`
+     resolves to auto and an SVG with only a viewBox collapses to 0. */
+  .anim-stage :global(svg) {
+    height: 258px;
+    width: auto;
+    max-width: 100%;
+  }
+  .anim-name { font-size: var(--step-1); margin: 0.5rem 0 0.4rem; }
+  .anim-note { font-size: 0.9rem; line-height: 1.6; color: var(--muted); }
+
+  .anim-foot {
+    margin-top: clamp(1.5rem, 3vw, 2.25rem);
+    max-width: 62ch;
+    font-size: 0.9rem;
+    line-height: 1.6;
+    color: var(--muted);
+  }
+  .anim-foot code {
+    font-family: var(--font-mono);
+    font-size: 0.85em;
+    color: var(--accent-text);
+  }
+
+  @media (max-width: 900px) { .anim-grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 620px) { .anim-grid { grid-template-columns: 1fr; } }
+</style>

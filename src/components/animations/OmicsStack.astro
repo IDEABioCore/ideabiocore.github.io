@@ -1,0 +1,149 @@
+---
+// Multi-omic stack — three live traces (RNA, protein, metabolite) scrolling
+// continuously at different rates, with a read head sweeping across them.
+// Pure CSS + SVG, no JavaScript.
+//
+// Each lane is one path unit 222 wide that starts and ends on the baseline, so
+// tiling it and translating by exactly -222 loops seamlessly. The three lanes
+// run at different speeds, which keeps them permanently out of phase — the
+// visual stand-in for transcript → protein → metabolite lag.
+interface Props {
+  label?: string;
+  class?: string;
+}
+const { label = 'Three live omics traces — RNA, protein and metabolite — scrolling out of phase while a read head sweeps across.', class: className } = Astro.props;
+
+// SVG ids are document-global — see the note in Bioreactor.astro.
+const uid = `om${(globalThis.__ideabioAnimSeq = (globalThis.__ideabioAnimSeq ?? 0) + 1)}`;
+
+const W = 222; // one tile
+const lanes = [
+  {
+    name: 'RNA',
+    speed: 3.4,
+    d: 'M0,0 H16 L24,-34 L32,0 H54 L64,-18 L74,0 H98 L108,-46 L118,0 H144 L154,-22 L164,0 H188 L196,-12 L204,0 H222',
+  },
+  {
+    name: 'Protein',
+    speed: 4.3,
+    d: 'M0,0 H20 L30,-24 L40,0 H62 L74,-40 L86,0 H110 L120,-16 L130,0 H156 L168,-30 L180,0 H202 L210,-10 L216,0 H222',
+  },
+  {
+    name: 'Metabolite',
+    speed: 5.4,
+    d: 'M0,0 H14 L22,-20 L30,0 H50 L62,-38 L74,0 H96 L104,-14 L112,0 H138 L150,-28 L162,0 H190 L198,-18 L206,0 H222',
+  },
+];
+---
+
+<figure class:list={['omics-anim', className]}>
+  <svg viewBox="0 0 320 208" role="img" aria-label={label} class="omics-svg">
+    <title>{label}</title>
+
+    <defs>
+      <clipPath id={`${uid}-window`}>
+        <rect x="84" y="4" width={W} height="200" />
+      </clipPath>
+    </defs>
+
+    <circle class="om-glow" cx="250" cy="40" r="62" />
+
+    {lanes.map((lane, i) => (
+      <g>
+        <line class="om-base" x1="84" y1={60 + i * 62} x2="306" y2={60 + i * 62} />
+        <text class="om-label" x="8" y={60 + i * 62 + 4}>{lane.name}</text>
+      </g>
+    ))}
+
+    <g clip-path={`url(#${uid}-window)`}>
+      {lanes.map((lane, i) => (
+        <g transform={`translate(84, ${60 + i * 62})`}>
+          <g class="om-scroll" style={`animation-duration:${lane.speed}s`}>
+            {[0, 1, 2].map((k) => (
+              <g transform={`translate(${W * k},0)`} style={`opacity:${1 - i * 0.17}`}>
+                <path class="om-fill" d={`${lane.d} Z`} />
+                <path class="om-trace" d={lane.d} />
+              </g>
+            ))}
+          </g>
+        </g>
+      ))}
+    </g>
+
+    <!-- information moving down the stack -->
+    {[0, 1].map((i) => (
+      <path
+        class="om-flow"
+        d={`M30,${78 + i * 62} v14 m-5,-5 l5,5 l5,-5`}
+        style={`animation-delay:${i * 0.5}s`}
+      />
+    ))}
+
+    <g class="om-head">
+      <rect class="om-head-glow" x="-9" y="8" width="18" height="192" rx="9" />
+      <line class="om-head-line" x1="0" y1="10" x2="0" y2="198" />
+      <circle class="om-head-dot" cx="0" cy="10" r="3.5" />
+    </g>
+  </svg>
+</figure>
+
+<style>
+  .omics-anim { margin: 0; }
+  .omics-svg { width: 100%; height: auto; overflow: visible; }
+
+  /* ---------- static appearance ---------- */
+  .om-glow { fill: color-mix(in srgb, var(--accent) 12%, transparent); filter: blur(24px); }
+  .om-base { stroke: var(--hairline); stroke-width: 1.5; stroke-dasharray: 2 6; stroke-linecap: round; }
+  .om-label {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    fill: var(--muted);
+  }
+  .om-trace {
+    fill: none;
+    stroke: var(--accent);
+    stroke-width: 2.25;
+    stroke-linejoin: round;
+    stroke-linecap: round;
+  }
+  .om-fill { fill: color-mix(in srgb, var(--accent) 20%, transparent); stroke: none; }
+  .om-flow { fill: none; stroke: var(--muted); stroke-width: 1.6; stroke-linecap: round; opacity: 0.45; }
+  .om-head-line { stroke: var(--accent); stroke-width: 1.5; opacity: 0.7; }
+  .om-head-dot { fill: var(--accent); }
+  .om-head-glow { fill: color-mix(in srgb, var(--accent) 22%, transparent); filter: blur(6px); }
+  .om-head { transform: translateX(84px); }
+
+  /* ---------- motion ---------- */
+  /* exactly one tile per iteration, so the seam never shows */
+  @keyframes om-scroll {
+    from { transform: translateX(0); }
+    to   { transform: translateX(-222px); }
+  }
+  @keyframes om-sweep {
+    0%   { transform: translateX(84px); opacity: 0; }
+    6%   { opacity: 1; }
+    88%  { transform: translateX(306px); opacity: 1; }
+    96%  { transform: translateX(306px); opacity: 0; }
+    100% { transform: translateX(84px); opacity: 0; }
+  }
+  @keyframes om-flow-pulse {
+    0%, 60%, 100% { opacity: 0.2; }
+    18%           { opacity: 1; }
+  }
+
+  .om-scroll { animation-name: om-scroll; animation-timing-function: linear; animation-iteration-count: infinite; }
+  .om-head   { animation: om-sweep 7s linear infinite; }
+  .om-flow   { animation: om-flow-pulse 2.4s ease-in-out infinite backwards; }
+
+  /* Drop the animations outright rather than relying on global.css collapsing
+     them: it shortens duration but leaves animation-delay intact, so a delayed
+     element would sit in its `backwards` 0% state for the whole delay. */
+  @media (prefers-reduced-motion: reduce) {
+    .om-scroll, .om-head, .om-flow { animation: none; }
+    .om-scroll { transform: none; }
+    .om-head { transform: translateX(240px); opacity: 1; }
+    .om-flow { opacity: 0.45; }
+  }
+</style>

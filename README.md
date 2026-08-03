@@ -62,4 +62,27 @@ The site auto-deploys via GitHub Actions (`.github/workflows/deploy.yml`) on eve
 
 **Custom domain (later):** add a `public/CNAME` file containing `www.ideabio.org.au`, point the domain's DNS at GitHub Pages, and update `site` in `astro.config.mjs`.
 
+## Rolling back to Wix (previous DNS setup)
+
+Before switching `ideabio.org.au` to GitHub Pages, the domain pointed to the old **Wix** site.
+If you ever need to go back to Wix, restore these DNS records at the domain registrar:
+
+**A records (Host: `ideabio.org.au`, TTL 1 hour):**
+
+| Host | Value |
+|------|-------|
+| `ideabio.org.au` | `185.230.63.107` |
+| `ideabio.org.au` | `185.230.63.186` |
+| `ideabio.org.au` | `185.230.63.171` |
+
+**CNAME records (TTL 1 hour):**
+
+| Host | Value |
+|------|-------|
+| `en.ideabio.org.au`  | `cdn1.wixdns.net` |
+| `www.ideabio.org.au` | `cdn1.wixdns.net` |
+
+The old Wix site can still be edited here (requires the Wix account login):
+<https://estebanmarcellin-aibnacab.editor.wix.com/html/editor/web/renderer/edit/eb6a52ef-48de-41a3-b5dd-d27859642a1e?metaSiteId=adaa3d96-d8d3-4bb1-966e-4d6e6b94acd0>
+
 `old/` (the archived previous Wix site) and the unused source video are excluded from git.

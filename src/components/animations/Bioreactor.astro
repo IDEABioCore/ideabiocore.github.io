@@ -1,0 +1,241 @@
+---
+// Bioreactor — one batch on a 13 s loop. Pure CSS + SVG, no JavaScript.
+//
+// Movement is layered so something is always moving regardless of where the
+// batch is: the impeller turns (1.1 s), the surface ripples (2.6 s) and bubbles
+// stream continuously (1.3–2.4 s), while the slow layer — turbidity rising,
+// harvest, refill — carries the 13 s story.
+interface Props {
+  label?: string;
+  class?: string;
+}
+const { label = 'A bioreactor running a batch: the impeller turns, the sparger bubbles, and the broth clouds over before harvest.', class: className } = Astro.props;
+
+// SVG ids are document-global. Two of these on one page (two fermentation bios,
+// say) would both resolve url(#...) to the first clipPath, and the second
+// vessel's broth would escape its walls. Counter is deterministic per build.
+const uid = `br${(globalThis.__ideabioAnimSeq = (globalThis.__ideabioAnimSeq ?? 0) + 1)}`;
+
+// Deterministic spread — no Math.random, so the markup is stable across builds.
+const bubbles = Array.from({ length: 30 }, (_, i) => ({
+  x: 56 + ((i * 43) % 88),
+  r: +(2.4 + (((i * 13) % 9) / 9) * 3.6).toFixed(2),
+  d: +((((i * 31) % 100) / 100) * 1.9).toFixed(2),
+  t: +(1.1 + (((i * 17) % 11) / 11) * 1.0).toFixed(2),
+}));
+
+// Mixing vortex: big soft lobes orbiting the shaft. These carry most of the
+// large-area movement — thin strokes alone read as a static drawing.
+const swirls = [
+  { rx: 46, ry: 17, cy: 150, dur: 3.2, op: 0.5 },
+  { rx: 36, ry: 13, cy: 172, dur: 2.4, op: 0.4 },
+  { rx: 40, ry: 15, cy: 112, dur: 4.0, op: 0.34 },
+];
+---
+
+<figure class:list={['bio-anim', className]}>
+  <svg viewBox="0 0 200 268" role="img" aria-label={label} class="bio-svg">
+    <title>{label}</title>
+
+    <defs>
+      <clipPath id={`${uid}-vessel`}>
+        <path d="M44,58 V186 C44,212 66,226 100,226 C134,226 156,212 156,186 V58 Z" />
+      </clipPath>
+    </defs>
+
+    <circle class="br-glow" cx="140" cy="70" r="58" />
+
+    <rect class="br-motor" x="86" y="14" width="28" height="28" rx="6" />
+    <rect class="br-head" x="34" y="42" width="132" height="14" rx="7" />
+
+    <g clip-path={`url(#${uid}-vessel)`}>
+      <g class="br-liquid">
+        <rect class="br-broth" x="40" y="76" width="120" height="156" />
+        <rect class="br-turbidity" x="40" y="76" width="120" height="156" />
+        <!-- rippling surface: one wave period is 60 units, so translating by
+             -60 loops seamlessly -->
+        <path
+          class="br-surface"
+          d="M-80,76 q15,-7 30,0 t30,0 t30,0 t30,0 t30,0 t30,0 t30,0 t30,0 t30,0 t30,0"
+        />
+
+        <g class="br-swirls">
+          {swirls.map((s, i) => (
+            <ellipse
+              class="br-swirl"
+              cx="100"
+              cy={s.cy}
+              rx={s.rx}
+              ry={s.ry}
+              style={`animation-duration:${s.dur}s; animation-delay:-${i * 0.7}s; opacity:${s.op}`}
+            />
+          ))}
+        </g>
+      </g>
+
+      <g class="br-bubbles">
+        {bubbles.map((b) => (
+          <circle
+            class="br-bubble"
+            cx={b.x}
+            cy="0"
+            r={b.r}
+            style={`animation-delay:${b.d}s; animation-duration:${b.t}s`}
+          />
+        ))}
+      </g>
+
+      <line class="br-shaft" x1="100" y1="42" x2="100" y2="208" />
+      <g class="br-turbine">
+        <ellipse cx="100" cy="126" rx="30" ry="4.5" />
+        <rect x="70" y="119" width="6" height="14" rx="1.5" />
+        <rect x="124" y="119" width="6" height="14" rx="1.5" />
+      </g>
+      <g class="br-turbine" style="animation-delay:-0.28s">
+        <ellipse cx="100" cy="182" rx="26" ry="4" />
+        <rect x="74" y="176" width="5" height="12" rx="1.5" />
+        <rect x="121" y="176" width="5" height="12" rx="1.5" />
+      </g>
+
+      <path class="br-sparger" d="M72,206 H128" />
+    </g>
+
+    <path class="br-wall" d="M44,58 V186 C44,212 66,226 100,226 C134,226 156,212 156,186 V58 Z" />
+
+    <path class="br-outlet" d="M100,226 V246 H140" />
+    <circle class="br-valve" cx="140" cy="246" r="5" />
+  </svg>
+</figure>
+
+<style>
+  .bio-anim { margin: 0; }
+  .bio-svg { width: 100%; height: auto; overflow: visible; }
+
+  /* ---------- static appearance ---------- */
+  .br-glow { fill: color-mix(in srgb, var(--accent) 13%, transparent); filter: blur(22px); }
+  .br-motor,
+  .br-head { fill: var(--surface-2); stroke: var(--hairline); stroke-width: 1.5; }
+  .br-wall { fill: none; stroke: var(--hairline); stroke-width: 2.5; }
+  .br-broth { fill: color-mix(in srgb, var(--accent) 7%, transparent); }
+  .br-turbidity { fill: color-mix(in srgb, var(--accent) 46%, transparent); opacity: 0.72; }
+  .br-surface {
+    fill: none;
+    stroke: color-mix(in srgb, var(--accent) 55%, transparent);
+    stroke-width: 2.5;
+    stroke-linecap: round;
+  }
+  .br-bubble { fill: color-mix(in srgb, var(--accent) 40%, transparent); }
+  .br-swirl { fill: color-mix(in srgb, var(--accent) 30%, transparent); }
+  .br-shaft { stroke: var(--muted); stroke-width: 3; stroke-linecap: round; }
+  .br-turbine ellipse,
+  .br-turbine rect { fill: var(--muted); }
+  .br-sparger { stroke: var(--muted); stroke-width: 3; stroke-linecap: round; stroke-dasharray: 1 7; }
+  .br-outlet { fill: none; stroke: var(--hairline); stroke-width: 2.5; stroke-linecap: round; }
+  .br-valve { fill: var(--surface-2); stroke: var(--hairline); stroke-width: 2; }
+
+  /* ---------- slow layer: the 13 s batch ---------- */
+  @keyframes br-growth {
+    0%   { opacity: 0; }
+    6%   { opacity: 0.06; }
+    24%  { opacity: 0.24; }
+    50%  { opacity: 0.66; }
+    72%  { opacity: 0.95; }
+    80%  { opacity: 1; }
+    92%  { opacity: 1; }
+    93%  { opacity: 0; }
+    100% { opacity: 0; }
+  }
+  @keyframes br-harvest {
+    0%, 84% { transform: translateY(0); }
+    92%     { transform: translateY(168px); }
+    93%     { transform: translateY(168px); }
+    100%    { transform: translateY(0); }
+  }
+  @keyframes br-sparge-window {
+    0%, 84% { opacity: 1; }
+    88%     { opacity: 0; }
+    94%     { opacity: 0; }
+    98%     { opacity: 1; }
+  }
+  @keyframes br-drain {
+    0%, 84% { stroke: var(--hairline); }
+    86%     { stroke: var(--accent); }
+    91%     { stroke: var(--accent); }
+    94%     { stroke: var(--hairline); }
+  }
+  @keyframes br-valve-pulse {
+    0%, 84% { fill: var(--surface-2); }
+    86%     { fill: var(--accent); }
+    91%     { fill: var(--accent); }
+    94%     { fill: var(--surface-2); }
+  }
+
+  /* ---------- fast layer: always moving ---------- */
+  @keyframes br-rise {
+    0%   { transform: translateY(206px) scale(0.4); opacity: 0; }
+    14%  { opacity: 0.95; }
+    82%  { opacity: 0.75; }
+    100% { transform: translateY(70px) scale(1.2); opacity: 0; }
+  }
+  @keyframes br-spin {
+    0%   { transform: scaleX(1); }
+    25%  { transform: scaleX(0.06); }
+    50%  { transform: scaleX(-1); }
+    75%  { transform: scaleX(0.06); }
+    100% { transform: scaleX(1); }
+  }
+  @keyframes br-ripple {
+    0%   { transform: translate(0, 0); }
+    50%  { transform: translate(-30px, -1.5px); }
+    100% { transform: translate(-60px, 0); }
+  }
+  /* lobes tumbling around the shaft — the broth being mixed */
+  @keyframes br-swirl {
+    0%   { transform: rotate(0deg) scaleX(1); }
+    25%  { transform: rotate(0deg) scaleX(0.35); }
+    50%  { transform: rotate(0deg) scaleX(-1); }
+    75%  { transform: rotate(0deg) scaleX(0.35); }
+    100% { transform: rotate(0deg) scaleX(1); }
+  }
+
+  .br-turbidity { animation: br-growth 13s linear infinite; }
+  .br-liquid    { animation: br-harvest 13s ease-in-out infinite; }
+  .br-bubbles   { animation: br-sparge-window 13s linear infinite; }
+  .br-outlet    { animation: br-drain 13s linear infinite; }
+  .br-valve     { animation: br-valve-pulse 13s linear infinite; }
+
+  /* `backwards` so a staggered bubble waits at the sparger, not at its base position */
+  .br-bubble {
+    animation-name: br-rise;
+    animation-timing-function: ease-in;
+    animation-iteration-count: infinite;
+    animation-fill-mode: backwards;
+  }
+  .br-surface { animation: br-ripple 2.6s linear infinite; }
+  .br-swirl {
+    transform-box: fill-box;
+    transform-origin: center;
+    animation-name: br-swirl;
+    animation-timing-function: ease-in-out;
+    animation-iteration-count: infinite;
+  }
+  .br-turbine {
+    transform-box: fill-box;
+    transform-origin: center;
+    animation: br-spin 1.1s linear infinite;
+  }
+
+  /* Drop the animations outright rather than relying on global.css collapsing
+     them: it shortens duration but leaves animation-delay intact, so a delayed
+     bubble would sit in its `backwards` 0% state (opacity 0) for its delay.
+     What remains is a mid-run vessel: turbid broth, bubbles in the column. */
+  @media (prefers-reduced-motion: reduce) {
+    .br-liquid, .br-turbidity, .br-bubbles, .br-bubble, .br-surface, .br-swirl,
+    .br-outlet, .br-valve, .br-turbine { animation: none; }
+    .br-liquid { transform: none; }
+    .br-turbidity { opacity: 0.72; }
+    .br-bubbles { opacity: 1; }
+    .br-bubble { transform: translateY(150px); opacity: 0.75; }
+    .br-turbine { transform: none; }
+  }
+</style>

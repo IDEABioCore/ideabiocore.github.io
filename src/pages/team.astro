@@ -2,9 +2,32 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import PageHero from '../components/PageHero.astro';
 import teamData from '../data/team.json';
+import Bioreactor from '../components/animations/Bioreactor.astro';
+import OmicsStack from '../components/animations/OmicsStack.astro';
+import LiquidHandler from '../components/animations/LiquidHandler.astro';
+import ColonyGrowth from '../components/animations/ColonyGrowth.astro';
 
-type Member = { name: string; role: string; image: string; bio?: string };
+// `focus` is an optional CSS object-position, for headshots whose subject sits
+// off-centre in the source frame and would otherwise crop badly at 4:5.
+type Member = { name: string; role: string; image: string; bio?: string; anim?: string; focus?: string };
 const team = teamData as Member[];
+
+// `anim` in team.json picks the looping illustration shown in that person's bio
+// modal. Leave it out and the modal is simply text — nothing else changes.
+const ANIMATIONS: Record<string, any> = {
+  bioreactor: Bioreactor,
+  omics: OmicsStack,
+  liquid: LiquidHandler,
+  colony: ColonyGrowth,
+};
+
+const paragraphs = (bio: string) => bio.split(/\n\s*\n/).map((p) => p.trim()).filter(Boolean);
+
+// Resolved up here so the template can render <Anim /> directly — a component
+// cannot be looked up from a map inline in the markup.
+const bios = team
+  .map((m, i) => ({ ...m, i, Anim: m.anim ? ANIMATIONS[m.anim] : null }))
+  .filter((m) => m.bio);
 ---
 
 <BaseLayout title="Meet our Team · IDEA Bio" description="The IDEA Bio team — fermentation, automation, systems biology, synthetic biology, machine learning and bioprocess engineering at the AIBN.">
@@ -22,22 +45,92 @@ const team = teamData as Member[];
         {team.map((m, i) => (
           <li class="member" data-reveal style={`transition-delay:${(i % 4) * 60}ms`}>
             <div class="member-photo">
-              <img src={m.image} alt={`Portrait of ${m.name}`} width="400" height="480" loading="lazy" />
+              <img
+                src={m.image}
+                alt={`Portrait of ${m.name}`}
+                width="400"
+                height="480"
+                loading="lazy"
+                style={m.focus ? `object-position:${m.focus}` : undefined}
+              />
             </div>
             <h2 class="member-name">{m.name}</h2>
             <p class="member-role">{m.role}</p>
             {m.bio && (
-              <details class="member-bio">
-                <summary>Read bio</summary>
-                <p>{m.bio}</p>
-              </details>
+              <button type="button" class="bio-open" data-bio-open={`bio-${i}`} aria-haspopup="dialog">
+                Read more
+              </button>
             )}
           </li>
         ))}
       </ul>
     </div>
   </section>
+
+  {bios.map(({ i, name, role, image, bio, focus, Anim }) => (
+    <dialog class="bio-modal" id={`bio-${i}`} aria-labelledby={`bio-${i}-name`}>
+      <div class="bio-glow" aria-hidden="true"></div>
+      <button type="button" class="bio-close" data-bio-close aria-label={`Close ${name}'s biography`}>
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" aria-hidden="true">
+          <path d="M6 6l12 12M18 6L6 18" />
+        </svg>
+      </button>
+      <div class="bio-modal-inner">
+        <div class="bio-modal-head">
+          <img
+            class="bio-modal-photo"
+            src={image}
+            alt=""
+            width="200"
+            height="250"
+            loading="lazy"
+            style={focus ? `object-position:${focus}` : undefined}
+          />
+          <div>
+            <h2 class="bio-modal-name" id={`bio-${i}-name`}>{name}</h2>
+            <p class="bio-modal-role">{role}</p>
+          </div>
+        </div>
+        <div class:list={['bio-modal-main', { 'has-anim': Anim }]}>
+          {Anim && (
+            <div class="bio-anim-band">
+              <Anim />
+            </div>
+          )}
+          <div class="bio-modal-body">
+            {paragraphs(bio!).map((p) => <p>{p}</p>)}
+          </div>
+        </div>
+      </div>
+    </dialog>
+  ))}
 </BaseLayout>
+
+<script>
+  const modals = document.querySelectorAll<HTMLDialogElement>('dialog.bio-modal');
+
+  document.querySelectorAll<HTMLButtonElement>('[data-bio-open]').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const modal = document.getElementById(btn.dataset.bioOpen!) as HTMLDialogElement | null;
+      if (!modal) return;
+      modal.showModal();
+      document.documentElement.style.overflow = 'hidden';
+    });
+  });
+
+  modals.forEach((modal) => {
+    modal.querySelector('[data-bio-close]')?.addEventListener('click', () => modal.close());
+
+    // Click on the backdrop (outside the content box) closes the dialog.
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) modal.close();
+    });
+
+    modal.addEventListener('close', () => {
+      document.documentElement.style.overflow = '';
+    });
+  });
+</script>
 
 <style>
   .team-grid {
@@ -70,36 +163,178 @@ const team = teamData as Member[];
     line-height: 1.35;
   }
 
-  .member-bio { margin-top: 0.55rem; }
-  .member-bio summary {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.35rem;
+  /* --- "Read more" trigger: same micro-type as the old <summary> --- */
+  .bio-open {
+    align-self: flex-start;
+    margin-top: 0.55rem;
+    padding: 0;
+    border: 0;
+    background: none;
     cursor: pointer;
-    list-style: none;
     font-family: var(--font-mono);
     font-size: 0.72rem;
     letter-spacing: 0.04em;
     text-transform: uppercase;
     color: var(--muted);
-    transition: color .15s ease;
+    transition: color .16s ease;
   }
-  .member-bio summary::-webkit-details-marker { display: none; }
-  .member-bio summary::after {
-    content: "+";
-    font-size: 0.95rem;
-    line-height: 1;
+  .bio-open::after {
+    content: " \2192";
     color: var(--accent-text);
   }
-  .member-bio[open] summary::after { content: "\2013"; }
-  .member-bio summary:hover { color: var(--ink); }
-  .member-bio p {
-    margin-top: 0.6rem;
-    font-size: 0.86rem;
-    line-height: 1.5;
-    color: var(--muted);
+  .bio-open:hover { color: var(--ink); }
+  .bio-open:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
+    border-radius: 3px;
   }
 
+  /* --- bio modal: surface-card treatment + the hero's violet glow --- */
+  .bio-modal {
+    position: relative;
+    width: min(940px, calc(100vw - 2rem));
+    max-height: min(82vh, 760px);
+    /* global reset sets `* { margin: 0 }`, which kills <dialog>'s default centring */
+    margin: auto;
+    padding: 0;
+    border: 1px solid var(--hairline);
+    border-radius: var(--radius);
+    background: var(--surface);
+    color: var(--ink);
+    box-shadow: var(--shadow);
+    overflow: clip;
+  }
+  .bio-modal::backdrop {
+    background: color-mix(in srgb, #0E0E11 58%, transparent);
+    backdrop-filter: blur(4px);
+  }
+  .bio-glow {
+    position: absolute;
+    top: -46%; right: -14%;
+    width: 380px; height: 380px;
+    background: radial-gradient(circle, color-mix(in srgb, var(--accent) 14%, transparent), transparent 68%);
+    filter: blur(28px);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .bio-modal[open] { animation: bio-in .22s ease both; }
+  @keyframes bio-in {
+    from { opacity: 0; transform: translateY(10px) scale(.985); }
+    to   { opacity: 1; transform: none; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .bio-modal[open] { animation: none; }
+  }
+
+  .bio-modal-inner {
+    position: relative;
+    z-index: 1;
+    max-height: min(82vh, 760px);
+    overflow-y: auto;
+    padding: clamp(1.6rem, 4vw, 2.4rem);
+  }
+
+  /* ghost-button styling, matching .btn--ghost hover behaviour */
+  .bio-close {
+    position: absolute;
+    top: 0.9rem;
+    right: 0.9rem;
+    z-index: 2;
+    width: 2.1rem;
+    height: 2.1rem;
+    display: grid;
+    place-items: center;
+    padding: 0;
+    border: 1px solid var(--hairline);
+    border-radius: 999px;
+    background: var(--surface);
+    color: var(--muted);
+    cursor: pointer;
+    transition: color .16s ease, border-color .16s ease, transform .16s ease;
+  }
+  .bio-close:hover { color: var(--accent-text); border-color: var(--accent); }
+  .bio-close:active { transform: translateY(1px); }
+  .bio-close:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+  .bio-modal-head {
+    display: flex;
+    align-items: center;
+    gap: 1.1rem;
+    padding-right: 2.4rem;
+    padding-bottom: 1.15rem;
+    margin-bottom: 1.35rem;
+    border-bottom: 1px solid var(--hairline);
+  }
+  /* same 4:5 crop and radius as the team cards — no circles anywhere on this site */
+  .bio-modal-photo {
+    width: 84px;
+    aspect-ratio: 4 / 5;
+    height: auto;
+    flex: none;
+    object-fit: cover;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--hairline);
+    background: var(--surface-2);
+  }
+  .bio-modal-name {
+    font-size: var(--step-2);
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    margin: 0 0 0.3rem;
+  }
+  .bio-modal-role {
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    color: var(--accent-text);
+    line-height: 1.35;
+    margin: 0;
+  }
+  /* illustration beside the bio text */
+  .bio-modal-main.has-anim {
+    display: grid;
+    grid-template-columns: 250px 1fr;
+    gap: clamp(1.25rem, 3vw, 1.9rem);
+    /* centred against the text block rather than pinned to its first line */
+    align-items: center;
+  }
+  .bio-anim-band {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.9rem;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--hairline);
+    /* graph-paper dots, so the illustration reads as staged rather than floating */
+    background-color: var(--bg);
+    background-image: radial-gradient(var(--hairline) 1px, transparent 1px);
+    background-size: 14px 14px;
+    overflow: hidden;
+  }
+  /* width-driven so each loop fills its column; max-height keeps the portrait
+     vessel from pushing the column taller than the text beside it */
+  .bio-anim-band :global(svg) {
+    width: 100%;
+    height: auto;
+    max-height: 300px;
+  }
+
+  .bio-modal-body p {
+    font-size: 0.94rem;
+    line-height: 1.65;
+    color: var(--ink-soft);
+    margin: 0 0 1rem;
+  }
+  .bio-modal-body p:last-child { margin-bottom: 0; }
+
   @media (max-width: 860px) { .team-grid { grid-template-columns: repeat(3, 1fr); } }
-  @media (max-width: 620px) { .team-grid { grid-template-columns: repeat(2, 1fr); } }
+  /* stack the illustration above the text before the two columns get cramped */
+  @media (max-width: 760px) {
+    .bio-modal-main.has-anim { grid-template-columns: 1fr; }
+    .bio-anim-band :global(svg) { max-height: 220px; width: auto; max-width: 100%; }
+  }
+  @media (max-width: 620px) {
+    .team-grid { grid-template-columns: repeat(2, 1fr); }
+    .bio-modal-head { flex-direction: column; align-items: flex-start; gap: 0.85rem; }
+  }
 </style>
