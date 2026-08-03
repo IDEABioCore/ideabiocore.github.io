@@ -3,9 +3,10 @@
 Use this to collect bios for the **Meet our Team** page. Bios are optional — a member
 without one simply shows their photo, name and role, with no "Read more" link.
 
-## Still missing a bio
+## Status
 
-Mr Nhat Huynh · Sally Yukiko
+All 14 current team members have a bio. Use the template below for new starters, or when
+someone wants theirs rewritten.
 
 ---
 
