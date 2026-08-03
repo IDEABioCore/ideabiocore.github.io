@@ -5,9 +5,7 @@ without one simply shows their photo, name and role, with no "Read more" link.
 
 ## Still missing a bio
 
-Dr Axa Gonzalez · Dr Robin Palfreyman · Dr Subaru Muroi · Dr Justin Chitpin ·
-Dr Jerry Yang · Mr Laurin Walther · Mr Nhat Huynh · Lachlan Jeremijenko ·
-Sally Yukiko · Catherine Varas
+Mr Nhat Huynh · Sally Yukiko
 
 ---
 
