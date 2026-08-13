@@ -1,10 +1,10 @@
 ---
 const nav = [
   { href: '/', label: 'Home' },
-  { href: '/about', label: 'About' },
-  { href: '/team', label: 'Team' },
+  { href: '/strategy', label: 'About' },
+  { href: '/team-3', label: 'Team' },
   { href: '/projects', label: 'Projects' },
-  { href: '/services', label: 'Services' },
+  { href: '/clients', label: 'Services' },
   { href: '/contact', label: 'Contact' },
 ];
 
@@ -66,6 +66,9 @@ const isActive = (href: string) =>
     position: sticky;
     top: 0;
     z-index: 60;
+    /* Keep the header visually fixed while page content cross-fades during
+       a view transition (it matches on both ends, so it doesn't fade). */
+    view-transition-name: site-header;
     background: color-mix(in srgb, var(--surface) 82%, transparent);
     backdrop-filter: saturate(1.4) blur(12px);
     border-bottom: 1px solid var(--hairline);

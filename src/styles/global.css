@@ -219,6 +219,31 @@ p { text-wrap: pretty; }
 .skip-link:focus { top: 14px; }
 
 /* =========================== motion =========================== */
+/* Cross-page transitions — native View Transitions API, zero JS. Browsers
+   without support (and users preferring reduced motion, who never opt in
+   here) simply get a normal full-page navigation. */
+@media (prefers-reduced-motion: no-preference) {
+  @view-transition {
+    navigation: auto;
+  }
+}
+
+/* Scroll-driven drift on the accent glows (.hero-glow etc.) — progressive
+   enhancement, compositor-only (translate/opacity). Duration-based reduced-
+   motion overrides don't stop timeline animations, hence the explicit guard. */
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .glow-drift {
+      animation: glow-drift linear both;
+      animation-timeline: view();
+      animation-range: exit -20% exit 100%;
+    }
+  }
+}
+@keyframes glow-drift {
+  to { translate: 0 90px; opacity: 0.55; }
+}
+
 /* scroll reveal — only hides content when JS is present so no-JS still shows it */
 .js [data-reveal] {
   opacity: 0;

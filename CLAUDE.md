@@ -148,7 +148,7 @@ Verified conventions, not aspirations — each one is already in the codebase:
   on headings (`-0.032em` on `h1`); `text-wrap: pretty` on paragraphs.
 - **Readable measure.** Body copy capped around 42–54ch, `--muted` for calm.
 - **Alternating rhythm** on repeated rows so long pages don't feel monotonous —
-  see `.svc:nth-child(even)` in `src/pages/services.astro:93`.
+  see `.svc:nth-child(even)` in `src/pages/clients.astro:93`.
 - **Soft depth, not heavy boxes.** Long low-opacity shadows and 1px hairlines
   instead of thick outlines.
 - **Accent glow** is the signature motif: an absolutely-positioned `blur(28px)`
@@ -156,7 +156,11 @@ Verified conventions, not aspirations — each one is already in the codebase:
   content (`z-index: 0`, content at `1`). See `PageHero.astro`, `index.astro`,
   and the bio modal in `team.astro`.
 - **Motion is a subtle enhancement.** Hover lifts of `translateY(-3px)`/`(-4px)`,
-  transitions `.15s`–`.16s ease`, entrances `.22s`. Never bounce.
+  transitions `.15s`–`.16s ease`, entrances `.22s`. Never bounce. Cross-page
+  navigation uses the native View Transitions API (`@view-transition` in
+  `global.css`, opt-in only under `prefers-reduced-motion: no-preference`);
+  the accent glows drift on scroll via the `.glow-drift` class (CSS
+  scroll-driven animation, `@supports`-guarded).
 - **Portraits are 4:5 rectangles** with `--radius` on cards, `--radius-sm` inline.
   **There are no circular images anywhere on this site** — don't introduce one.
 - **Responsive by construction.** `clamp()` for fluid type and space; grids collapse
@@ -341,7 +345,7 @@ Fast ways to do it:
 | Reduced-motion override | `src/styles/global.css:236` |
 | Accent glow pattern | `src/components/PageHero.astro:44` |
 | Alternating rows | `src/pages/services.astro:93` |
-| Modal pattern (`<dialog>`) | `src/pages/team.astro` |
+| Modal pattern (`<dialog>`) | `src/pages/team-3.astro` |
 | Image inventory | `ASSETS.md` |
 | Deploy, and DNS rollback to Wix | `README.md` |
 
