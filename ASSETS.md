@@ -23,7 +23,6 @@ Order and roles taken from **Meet our Team**.
 | `team-robin-palfreyman.jpg` | Dr Robin Palfreyman | Bioinformatician |
 | `team-lachlan-jeremijenko.jpg` | Lachlan Jeremijenko | Bioprocess Engineer |
 | `team-sally-yukiko.jpg` | Sally Yukiko | Strategy, Operations / Finance |
-| `team-catherine-varas.jpg` | Catherine Varas | Software Engineer |
 | `team-group-photo.jpg` | Whole IDEA Bio team | Group shot outside the AIBN building — good "About / culture" band |
 
 ## Brand & building
