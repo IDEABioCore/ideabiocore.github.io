@@ -23,6 +23,7 @@ Order and roles taken from **Meet our Team**.
 | `team-robin-palfreyman.jpg` | Dr Robin Palfreyman | Bioinformatician |
 | `team-lachlan-jeremijenko.jpg` | Lachlan Jeremijenko | Bioprocess Engineer |
 | `team-sally-yukiko.jpg` | Sally Yukiko | Strategy, Operations / Finance |
+| `team-catherine-varas.jpg` | Catherine Varas | Software Engineer |
 | `team-group-photo.jpg` | Whole IDEA Bio team | Group shot outside the AIBN building — good "About / culture" band |
 
 ## Brand & building
@@ -32,7 +33,7 @@ Order and roles taken from **Meet our Team**.
 | `icon-idea-bio-molecule.png` | Molecule hexagon mark only | Favicon / compact logo |
 | `icon-idea-bio.svg` | Vector version of the mark | Scalable logo, favicon |
 | `aibn-building-dusk.jpg` | AIBN building photographed at dusk (with AIBN logo overlay) | Contact / location hero |
-| `aibn-building-illustration.png` | Stylised illustration of the AIBN building at dusk | Decorative hero / section art |
+| `aibn-building-illustration.jpg` | Stylised illustration of the AIBN building at dusk | Decorative hero / section art |
 
 ## Facility & equipment — BIOSTREAM bioreactors
 | File | What it is | Suggested use |
@@ -65,7 +66,7 @@ Order and roles taken from **Meet our Team**.
 | File | What it is | Suggested use |
 |---|---|---|
 | `cell-diagram-illustration.jpg` | Line-art eukaryotic cell illustration | Explainer / icon-style graphic |
-| `fluorescence-microscopy-cells.png` | Fluorescence microscopy of cells (cytoskeleton) | Science texture / hero overlay |
+| `fluorescence-microscopy-cells.jpg` | Fluorescence microscopy of cells (cytoskeleton) | Science texture / hero overlay |
 | `microbe-electron-microscopy.jpg` | Electron-microscopy of budding microbes | Research detail |
 | `yeast-cells-3d-render.jpg` | 3D render of yeast cells | "Brewing with yeast" project |
 | `biochip-microarray-wafer.jpg` | Gold microarray biochip handled with tweezers | Tech / platform section |
