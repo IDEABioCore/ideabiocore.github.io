@@ -2,6 +2,11 @@
 // Shared inner-page hero — keeps every page consistent with the Home look
 // (eyebrow + display heading + lead + optional image), the violet glow and the
 // scroll-reveal treatment. Pass an "actions" slot for buttons.
+//
+// Pass a "media" slot instead of `image` to show something other than a
+// photo (e.g. a live 3D scene) — it sits in the exact same bordered,
+// shadowed, rounded box a photo would, so every page's hero reads as one
+// uniform system regardless of what's inside that box.
 interface Props {
   eyebrow: string;
   title: string;
@@ -11,9 +16,10 @@ interface Props {
 }
 const { eyebrow, title, lead, image, imageAlt = '' } = Astro.props;
 const hasImage = Boolean(image);
+const hasMedia = Astro.slots.has('media');
 ---
 
-<section class:list={['page-hero', { 'has-image': hasImage }]}>
+<section class:list={['page-hero', { 'has-image': hasImage || hasMedia }]}>
   <div class="hero-glow glow-drift" aria-hidden="true"></div>
   <div class="container ph-inner">
     <div class="ph-copy" data-reveal>
@@ -23,7 +29,11 @@ const hasImage = Boolean(image);
       <div class="ph-actions"><slot name="actions" /></div>
     </div>
 
-    {hasImage && (
+    {hasMedia ? (
+      <figure class="ph-media" data-reveal>
+        <div class="ph-media-slot"><slot name="media" /></div>
+      </figure>
+    ) : hasImage && (
       <figure class="ph-media" data-reveal>
         <img src={image} alt={imageAlt} width="900" height="640" loading="eager" fetchpriority="high" />
       </figure>
@@ -72,6 +82,17 @@ const hasImage = Boolean(image);
     object-fit: cover;
     border-radius: var(--radius);
     box-shadow: var(--shadow);
+  }
+  .ph-media-slot {
+    /* taller than the photo variant: a 3D scene like the DBTL cycle is a
+       tall vertical composition (helix, cells, reactor) and reads small
+       inside a 3:2 landscape box — same reasoning as the team photos'
+       4:5 portrait cards elsewhere on the site */
+    width: 100%;
+    aspect-ratio: 4 / 5;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    overflow: hidden;
   }
   .ph-media::before {
     content: "";

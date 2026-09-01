@@ -1,0 +1,85 @@
+/* Labels inherit the host page's font and text colour, so they adopt
+   IDEA Bio's typography instead of importing any of their own. */
+.omics-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  white-space: nowrap;
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  /* deliberately NOT uppercased: it would turn α-helix / β-strand into
+     Greek capitals (Α, Β) and destroy the notation */
+  color: currentColor;
+  opacity: 0.72;
+  pointer-events: none;
+  user-select: none;
+  transform: translate(10px, -50%);
+}
+
+.omics-label::before {
+  content: '';
+  width: 14px;
+  height: 1px;
+  background: currentColor;
+  opacity: 0.5;
+}
+
+.omics-label--metabolite {
+  font-size: 10px;
+  opacity: 0.55;
+  letter-spacing: 0.06em;
+}
+
+.omics-label--pathway {
+  font-size: 12px;
+  opacity: 1;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+/* Fixed legend, bottom-left of the canvas */
+.omics-legend {
+  position: absolute;
+  left: clamp(1rem, 3vw, 2.5rem);
+  bottom: clamp(1rem, 3vw, 2.2rem);
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+  pointer-events: none;
+  user-select: none;
+  color: currentColor;
+}
+
+.omics-legend__item {
+  display: flex;
+  align-items: baseline;
+  gap: 0.6rem;
+}
+
+.omics-legend__dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  flex: none;
+  transform: translateY(-1px);
+}
+
+.omics-legend__name {
+  font-size: 12px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  font-weight: 500;
+}
+
+.omics-legend__desc {
+  font-size: 12px;
+  opacity: 0.6;
+  letter-spacing: 0.01em;
+}
+
+@media (max-width: 640px) {
+  .omics-legend__desc {
+    display: none;
+  }
+}

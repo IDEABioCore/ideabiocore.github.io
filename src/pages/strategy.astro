@@ -1,6 +1,7 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import PageHero from '../components/PageHero.astro';
+import DbtlViewer from '../components/DbtlViewer.astro';
 
 const capabilities = [
   {
@@ -26,9 +27,9 @@ const capabilities = [
     eyebrow="About"
     title="At the forefront of cell design"
     lead="IDEA Bio strives to impact society through innovation in cell design. We aim to make a difference in advanced biomanufacturing by creating useful cell factories."
-    image="/images/scientist-cleanroom-bioprocessing.jpg"
-    imageAlt="Researcher in a cleanroom gown connecting a bioprocessing rig"
-  />
+  >
+    <DbtlViewer slot="media" />
+  </PageHero>
 
   <!-- Portfolio -->
   <section class="section section--surface">

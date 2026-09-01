@@ -1,0 +1,29 @@
+---
+// Live 3D digital twin of a benchtop bioreactor (react-three-fiber + three.js,
+// ported from 3dbioreactor/ — see src/three/bioreactor/). `client:only="react"`
+// because Canvas needs a real WebGL context: Astro's static build runs in
+// Node, which has none, so this must skip server rendering entirely rather
+// than crash the build the way `client:visible` would.
+//
+// IdleBioreactor further defers the actual three.js/fiber/drei chunk (the
+// ~300KB-gzip part) behind requestIdleCallback, so it never competes with
+// the hero text and nav for bandwidth or main-thread time on first load.
+import IdleBioreactor from '../three/bioreactor/IdleBioreactor.jsx';
+---
+
+<div class="bioreactor-viewer" aria-hidden="true">
+  <IdleBioreactor client:only="react" />
+</div>
+
+<style>
+  .bioreactor-viewer {
+    width: 100%;
+    height: 100%;
+    /* no background of its own before the canvas mounts — sits on whatever
+       normal surface contains it, same as every other visual on the site */
+  }
+  .bioreactor-viewer :global(canvas) {
+    display: block;
+    touch-action: none; /* the drag-to-orbit gesture owns touch input on the canvas */
+  }
+</style>
